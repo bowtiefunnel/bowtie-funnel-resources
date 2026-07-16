@@ -1,14 +1,13 @@
 ---
 name: agent-anatomy
-description: Use when scaffolding a new AI agent's project folder, or when an existing agent's files (prompt, tools, procedures, scheduled jobs, integrations) are scattered in one directory with no structure. Organizes any agent folder into a filesystem-first layout inspired by the eve framework.
+description: Use when scaffolding a new AI agent's project folder, or when an existing agent's files (prompt, tools, procedures, scheduled jobs, integrations) are scattered in one directory with no structure. Organizes any agent folder into a filesystem-first layout.
 ---
 
 # agent-anatomy
 
 Organize any AI agent's project into a **filesystem-first** layout: one agent =
 one folder, every capability = a file in a conventionally-named subfolder.
-Inspired by the [eve framework](https://github.com/vercel/eve), adapted to be
-language-agnostic (tools can be Python, TypeScript, anything).
+Language-agnostic — tools can be Python, TypeScript, anything.
 
 **Core principle: names come from file paths, not config.** `tools/issue_refund.py`
 *is* the tool `issue_refund`. Never add a `name:` field to restate the path.

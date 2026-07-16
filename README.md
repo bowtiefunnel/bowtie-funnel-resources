@@ -9,9 +9,8 @@ Reusable skills for AI coding agents. One folder per skill under [`skills/`](ski
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-6b46c1.svg)
 
-Organize any AI agent's project into a clean, filesystem-first layout — inspired
-by the [eve framework](https://github.com/vercel/eve). One agent = one folder;
-every capability is a file in a conventionally-named subfolder.
+Organize any AI agent's project into a clean, filesystem-first layout. One agent
+= one folder; every capability is a file in a conventionally-named subfolder.
 
 Most agents start as a pile of loose files: a prompt, a few scripts, a cron job,
 some notes, all in one directory. `agent-anatomy` gives them a consistent shape.
