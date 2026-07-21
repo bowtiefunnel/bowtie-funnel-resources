@@ -78,11 +78,28 @@
   .hidden { display:none; }
   @media (max-width:760px){ .wrap{ padding:24px 12px 60px; } }
 </style>
+
+<style id="sitenav-css">
+.sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.sn-inner{max-width:1340px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
+.sn-brand{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:600;font-size:14px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;margin-right:auto;white-space:nowrap;}
+.sn-brand .slash{color:var(--accent);}
+.sn-tab{font-family:system-ui,-apple-system,sans-serif;font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
+.sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+.sn-tab.active{opacity:1;color:var(--accent);font-weight:600;}
+@media(max-width:520px){.sn-brand{font-size:12px;}.sn-tab{padding:6px 7px;font-size:12.5px;}}
+</style>
 </head>
 <body>
+<nav class="sitenav"><div class="sn-inner">
+  <a class="sn-brand" href="/"><span class="slash">/</span>Bowtie&nbsp;Funnel&nbsp;Resources</a>
+  <a class="sn-tab" href="/">Skills</a>
+  <a class="sn-tab active" href="/tools/">Tools</a>
+  <a class="sn-tab" href="/workflows/">Workflows</a>
+</div></nav>
+
 <div class="wrap">
   <header>
-    <a class="back" href="/">← Bowtie Funnel Resources</a>
     <div class="eyebrow">GTM tool stack</div>
     <h1>76 GTM tools, mapped by what they do</h1>
     <p class="lede">Every tool named across the <a href="/">48 GTM workflows</a> we teardown — sorted into the job it does in a go-to-market motion. For each: what it is, what it does, and its GTM impact. Click a category to filter. The <b>× N</b> under each tool is how many of the 48 workflows use it.</p>

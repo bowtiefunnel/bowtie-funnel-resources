@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 10-80-10 Is a Dial, Not a Template — Bowtie Funnel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0d1430; --navy-deep:#0a1330; --cream:#ece9e3;
+    --purple:#6B29F7; --purple-light:#b78aff; --sky:#a8e8f7;
+    --mint:#86efac; --lavender:#d4b3ff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:#33312c;font-family:'DM Sans',sans-serif;
+    display:flex;align-items:flex-start;justify-content:center;
+    min-height:100vh;padding:24px;
+  }
+  .stage{
+    width:1600px;flex:none;
+    background:radial-gradient(1400px 800px at 50% -10%, #142052 0%, var(--navy) 55%, var(--navy-deep) 100%);
+    position:relative;overflow:hidden;padding:56px 64px 44px;
+  }
+  .stage::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(236,233,227,0.04) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(236,233,227,0.04) 1px,transparent 1px);
+    background-size:48px 48px;pointer-events:none;
+  }
+  .head{text-align:center;position:relative;z-index:1;margin-bottom:12px;}
+  .eyebrow{
+    font-family:'DM Mono',monospace;font-size:15px;letter-spacing:0.28em;
+    text-transform:uppercase;color:var(--lavender);font-weight:500;margin-bottom:12px;
+  }
+  .head h1{font-size:38px;font-weight:700;letter-spacing:-0.02em;color:var(--cream);line-height:1.2;}
+  .head h1 span{color:var(--purple-light);}
+  .subnote{
+    text-align:center;position:relative;z-index:1;margin-bottom:32px;
+    font-family:'DM Mono',monospace;font-size:13.5px;color:rgba(236,233,227,0.6);letter-spacing:0.02em;
+  }
+  .subnote b{color:var(--sky);font-weight:500;}
+
+  /* ---- section labels ---- */
+  .seclabel{
+    position:relative;z-index:1;
+    font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.22em;
+    text-transform:uppercase;color:rgba(236,233,227,0.5);font-weight:500;
+    margin:0 0 14px;
+  }
+  .seclabel b{color:var(--lavender);font-weight:500;}
+
+  /* ---- the dial: three split bars ---- */
+  .dial{position:relative;z-index:1;display:flex;flex-direction:column;gap:14px;margin-bottom:12px;}
+  .drow{
+    display:grid;grid-template-columns:250px 1fr 340px;gap:20px;align-items:center;
+    background:rgba(13,20,48,0.85);border:1px solid rgba(236,233,227,0.08);
+    border-radius:12px;padding:16px 20px;
+  }
+  .drow.d-neuro{border-left:3px solid var(--purple-light);}
+  .drow.d-guard{border-left:3px solid var(--mint);}
+  .drow.d-pipe{border-left:3px solid var(--sky);}
+  .dname .pat{font-weight:700;color:#fff;font-size:15px;}
+  .dname .who{display:block;margin-top:3px;font-size:12px;color:rgba(236,233,227,0.55);}
+  .dname .split{
+    display:inline-block;margin-top:8px;font-family:'DM Mono',monospace;font-size:12px;
+    font-weight:500;padding:3px 10px;border-radius:999px;
+  }
+  .d-neuro .split{color:#e9dcff;background:rgba(107,41,247,0.35);border:1px solid var(--purple-light);}
+  .d-guard .split{color:#0d1430;background:var(--mint);}
+  .d-pipe .split{color:#0d1430;background:var(--sky);}
+  .bar{display:flex;height:44px;border-radius:9px;overflow:hidden;width:100%;}
+  .seg{display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;white-space:nowrap;}
+  .seg-n{background:linear-gradient(180deg,#7a3bff,#5b1fd6);color:#f1e8ff;}
+  .seg-d{background:rgba(168,232,247,0.16);border-top:1px solid rgba(168,232,247,0.35);border-bottom:1px solid rgba(168,232,247,0.35);color:var(--sky);}
+  .seg-off{background:rgba(236,233,227,0.05);color:rgba(236,233,227,0.35);}
+  .dwhy{font-size:13px;line-height:1.45;color:rgba(236,233,227,0.72);}
+  .dwhy b{color:var(--cream);font-weight:700;}
+
+  /* ---- ambiguity test ---- */
+  .grid2{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr 1fr;gap:24px;margin-top:30px;}
+  .panel{
+    background:rgba(13,20,48,0.85);border:1px solid rgba(236,233,227,0.1);
+    border-radius:14px;padding:22px 26px;
+  }
+  .rule{
+    font-size:20px;font-weight:700;color:var(--cream);letter-spacing:-0.01em;
+    line-height:1.35;margin-bottom:16px;
+  }
+  .rule span{color:var(--purple-light);}
+  .qa{display:flex;flex-direction:column;gap:10px;}
+  .q{
+    display:grid;grid-template-columns:220px 1fr;gap:14px;align-items:center;
+    background:rgba(107,41,247,0.08);border:1px solid rgba(183,138,255,0.25);
+    border-radius:10px;padding:11px 16px;font-size:13.5px;line-height:1.4;
+  }
+  .q .ask{font-weight:700;color:var(--purple-light);}
+  .q .ans{color:rgba(236,233,227,0.78);}
+  .q .ans b{color:#fff;font-weight:700;}
+  .q.q-none{background:rgba(168,232,247,0.06);border-color:rgba(168,232,247,0.3);}
+  .q.q-none .ask{color:var(--sky);}
+  .ex{
+    margin-top:16px;font-size:12.5px;line-height:1.5;color:rgba(236,233,227,0.6);
+    border-top:1px solid rgba(236,233,227,0.1);padding-top:14px;
+  }
+  .ex b{color:var(--mint);font-weight:700;}
+
+  /* ---- pyramid proof ---- */
+  .pyr{display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 16px;}
+  .prow{
+    height:52px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:12px;
+    font-size:13px;font-weight:500;
+  }
+  .prow .n{font-family:'DM Mono',monospace;font-size:19px;font-weight:700;}
+  .prow .lbl{font-size:12.5px;opacity:0.95;}
+  .p1{width:34%;background:rgba(107,41,247,0.4);border:1.5px solid var(--purple-light);color:#e9dcff;}
+  .p2{width:62%;background:rgba(134,239,172,0.14);border:1.5px solid var(--mint);color:var(--mint);}
+  .p3{width:92%;background:rgba(168,232,247,0.1);border:1.5px solid var(--sky);color:var(--sky);}
+  .pnote{font-size:13px;line-height:1.5;color:rgba(236,233,227,0.72);}
+  .pnote b{color:var(--cream);font-weight:700;}
+
+  /* ---- reframe band ---- */
+  .reframe{
+    position:relative;z-index:1;margin-top:28px;
+    background:linear-gradient(90deg, rgba(107,41,247,0.22), rgba(13,20,48,0.9) 60%);
+    border:1.5px solid var(--purple-light);border-radius:14px;
+    padding:22px 28px;
+  }
+  .reframe .tag{
+    font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--purple-light);font-weight:500;margin-bottom:8px;
+  }
+  .reframe p{font-size:19px;font-weight:500;color:var(--cream);line-height:1.45;letter-spacing:-0.01em;}
+  .reframe p strong{color:var(--purple-light);font-weight:700;}
+  .reframe .sub{margin-top:8px;font-size:13px;font-weight:400;color:rgba(236,233,227,0.65);}
+
+  .foot{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;margin-top:24px;}
+  .claim{font-size:18px;font-weight:500;color:var(--cream);letter-spacing:-0.01em;}
+  .claim strong{color:var(--lavender);font-weight:700;}
+  .brand img{height:38px;width:auto;display:block;}
+
+  /* ---- entrance animation ---- */
+  @media (prefers-reduced-motion: no-preference){
+    .head,.subnote,.stage > .seclabel,.drow,.panel,.reframe,.foot{
+      opacity:0;transform:translateY(14px);
+      animation:rise .55s ease-out forwards;
+    }
+    .head{animation-delay:.05s}
+    .subnote{animation-delay:.2s}
+    .stage > .seclabel{animation-delay:.35s}
+    .drow:nth-child(1){animation-delay:.5s}
+    .drow:nth-child(2){animation-delay:.8s}
+    .drow:nth-child(3){animation-delay:1.1s}
+    .grid2 .panel:nth-child(1){animation-delay:1.5s}
+    .grid2 .panel:nth-child(2){animation-delay:1.7s}
+    .reframe{animation-delay:2.0s}
+    .foot{animation-delay:2.2s}
+    @keyframes rise{to{opacity:1;transform:none}}
+
+    /* bars wipe in after their row lands */
+    .bar{position:relative;}
+    .bar::after{
+      content:"";position:absolute;inset:0;background:#111a3e;
+      transform-origin:right;animation:wipe .8s ease-in-out forwards;
+    }
+    .drow:nth-child(1) .bar::after{animation-delay:.9s}
+    .drow:nth-child(2) .bar::after{animation-delay:1.2s}
+    .drow:nth-child(3) .bar::after{animation-delay:1.5s}
+    @keyframes wipe{to{transform:scaleX(0)}}
+
+    /* pyramid stacks up bottom-first */
+    .pyr .prow{opacity:0;transform:translateY(10px);animation:rise .5s ease-out forwards;}
+    .pyr .p3{animation-delay:1.9s}
+    .pyr .p2{animation-delay:2.05s}
+    .pyr .p1{animation-delay:2.2s}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="head">
+    <div class="eyebrow">AI agents · RevOps · build philosophy</div>
+    <h1>10-80-10 is a <span>dial, not a template</span></h1>
+  </div>
+  <div class="subnote">The three build patterns are three positions on one dial — <b>how much neural do the edges need?</b> The deterministic core is always there. The neural miles are optional, and you only pay for them where ambiguity exists.</div>
+
+  <!-- THE DIAL -->
+  <div class="seclabel">The dial · <b>three positions, one principle</b></div>
+  <div class="dial">
+    <div class="drow d-neuro">
+      <div class="dname">
+        <span class="pat">Neurosymbolic</span>
+        <span class="who">Forecast · Win/loss · Churn · Commit</span>
+        <span class="split">10 - 80 - 10</span>
+      </div>
+      <div class="bar">
+        <div class="seg seg-n" style="width:10%">10</div>
+        <div class="seg seg-d" style="width:80%">deterministic 80 — attribution, checks, learned rules</div>
+        <div class="seg seg-n" style="width:10%">10</div>
+      </div>
+      <div class="dwhy"><b>Full pattern.</b> Vague ask in, judgment-heavy narrative out — both neural miles earn their keep.</div>
+    </div>
+
+    <div class="drow d-guard">
+      <div class="dname">
+        <span class="pat">Guarded judgment</span>
+        <span class="who">Lead routing · Deal risk · CPQ · Hygiene</span>
+        <span class="split">~5 - 90 - 5</span>
+      </div>
+      <div class="bar">
+        <div class="seg seg-n" style="width:5%">5</div>
+        <div class="seg seg-d" style="width:90%">deterministic 90 — rules flag &amp; validate everything before it lands</div>
+        <div class="seg seg-n" style="width:5%">5</div>
+      </div>
+      <div class="dwhy"><b>Edges shrink.</b> A structured trigger ate most of the first 10; the output is a short note, so the last 10 shrinks too.</div>
+    </div>
+
+    <div class="drow d-pipe">
+      <div class="dname">
+        <span class="pat">Deterministic pipeline</span>
+        <span class="who">Pipeline coverage · Comp &amp; quota · Activity capture</span>
+        <span class="split">0 - 100 - 0</span>
+      </div>
+      <div class="bar">
+        <div class="seg seg-off" style="width:7%">none</div>
+        <div class="seg seg-d" style="width:86%">deterministic 100 — queries, arithmetic, API sync. Code computes.</div>
+        <div class="seg seg-off" style="width:7%">none</div>
+      </div>
+      <div class="dwhy"><b>Edges gone.</b> The trigger IS the spec, and a sync has nothing to say. Sometimes a tiny narration (0-100-5) — never computation.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <!-- AMBIGUITY TEST -->
+    <div class="panel">
+      <div class="seclabel">The test · <b>only use neural where language ambiguity exists</b></div>
+      <div class="rule">Two questions decide the dial position — <span>nothing else does.</span></div>
+      <div class="qa">
+        <div class="q">
+          <span class="ask">Ambiguity coming IN?</span>
+          <span class="ans">Vague human question, messy scope → you need a <b>first 10%</b> to frame the problem</span>
+        </div>
+        <div class="q">
+          <span class="ask">Ambiguity going OUT?</span>
+          <span class="ans">A human needs a nuanced explanation → you need a <b>last 10%</b> to narrate it</span>
+        </div>
+        <div class="q q-none">
+          <span class="ask">Neither?</span>
+          <span class="ans">It's a pipeline. Adding an LLM anyway just adds <b>cost and new failure modes</b></span>
+        </div>
+      </div>
+      <div class="ex"><b>Purest example — Activity capture:</b> email → CRM sync. No question to interpret, nothing to explain. Forcing a 10-80-10 shape onto it means inventing work for a model to do — the exact anti-pattern that makes agent pilots stall.</div>
+    </div>
+
+    <!-- PYRAMID PROOF -->
+    <div class="panel">
+      <div class="seclabel">The proof · <b>a healthy fleet is a pyramid</b></div>
+      <div class="pyr">
+        <div class="prow p1"><span class="n">4</span><span class="lbl">neurosymbolic — true reasoning agents</span></div>
+        <div class="prow p2"><span class="n">7</span><span class="lbl">guarded judgment — rules validate, model narrates</span></div>
+        <div class="prow p3"><span class="n">10</span><span class="lbl">deterministic pipelines — code does the work</span></div>
+      </div>
+      <div class="pnote">This is how mature automation is built everywhere: <b>most agents are pipelines, a few are guarded, only the top handful truly reason.</b> An inverted pyramid — reasoning models everywhere — is how you get impressive demos with unpayable bills and unauditable answers.</div>
+    </div>
+  </div>
+
+  <!-- REFRAME -->
+  <div class="reframe">
+    <div class="tag">Read the empty cells as the selling point</div>
+    <p>Every agent runs a deterministic core. The neural miles are <strong>optional add-ons you pay for only when ambiguity exists.</strong></p>
+    <p class="sub">"None" in a first-10% or last-10% cell isn't a gap — it's the discipline: we won't put an expensive model where plain code does the job perfectly.</p>
+  </div>
+
+  <div class="foot">
+    <div class="claim">One dial: <strong>how much neural do the edges need?</strong> Code always carries the middle.</div>
+    <div class="brand"><img src="mainLogo.png" alt="Bowtie Funnel"></div>
+  </div>
+</div>
+</body>
+</html>

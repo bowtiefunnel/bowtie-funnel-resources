@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agent-anatomy — Bowtie Funnel Resources</title>
+<meta name="description" content="A Claude Code skill that organizes any AI agent's project into a clean, filesystem-first folder layout. Scaffold new agents or reorganize messy ones.">
+<style>
+  :root {
+    --paper: #eef1f6; --surface: #ffffff; --ink: #161a22; --muted: #5b6472;
+    --line: #dbe1ea; --accent: #2f6fce; --accent-soft: #e4edfb; --good: #2f8f5b; --warn: #9a6b1a;
+    --radius: 10px;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --measure: 66ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #0e1116; --surface: #161b23; --ink: #e7ebf1; --muted: #98a2b1;
+      --line: #242c37; --accent: #5a9cf0; --accent-soft: #17263c; --good: #4bb37c; --warn: #c79a4e; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
+  .sn-brand{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;margin-right:auto;white-space:nowrap;}
+  .sn-brand .slash{color:var(--accent);}
+  .sn-tab{font-family:var(--sans);font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
+  .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+  .sn-tab.active{opacity:1;color:var(--accent);font-weight:600;}
+  @media(max-width:520px){.sn-brand{font-size:12px;}.sn-tab{padding:6px 7px;font-size:12.5px;}}
+
+  .wrap { max-width: 940px; margin: 0 auto; padding: clamp(28px, 6vw, 64px) clamp(20px, 5vw, 40px) 80px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  .eyebrow a{color:var(--muted);text-decoration:none;} .eyebrow a:hover{color:var(--accent);}
+  .eyebrow .sep { color: var(--muted); margin: 0 8px; }
+  h1 { font-family: var(--mono); font-size: clamp(34px, 6.5vw, 58px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.02; margin: 0 0 20px; text-wrap: balance; }
+  h1 .slash { color: var(--accent); }
+  .lede { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); max-width: var(--measure); margin: 0 0 12px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .lede a { color: var(--accent); text-decoration: none; } .lede a:hover { text-decoration: underline; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 5px 11px; border: 1px solid var(--line); border-radius: 100px; color: var(--muted); background: var(--surface); }
+  .chip.mit { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+
+  section { margin-top: clamp(48px, 8vw, 80px); }
+  h2 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .prose { max-width: var(--measure); }
+
+  .transform { margin-top: 40px; display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(14px, 3vw, 28px); align-items: center; }
+  @media (max-width: 680px) { .transform { grid-template-columns: 1fr; } .arrow { transform: rotate(90deg); justify-self: center; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .panel-head { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 11px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .panel-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .panel.after .panel-head { color: var(--good); }
+  .panel.after .panel-head .dot { background: var(--good); }
+  .tree { font-family: var(--mono); font-size: 13px; line-height: 1.85; margin: 0; padding: 16px; white-space: pre; overflow-x: auto; color: var(--ink); }
+  .tree .row { display: block; }
+  .tree .dir { color: var(--accent); font-weight: 600; }
+  .tree .note { color: var(--muted); }
+  .tree .kept { color: var(--warn); }
+  .arrow { font-family: var(--mono); font-size: 22px; color: var(--accent); text-align: center; }
+  .tree .row { opacity: 0; animation: rise .5s ease forwards; }
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .tree .row { opacity: 1; animation: none; } }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 680px) { .cards { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 24px; }
+  .card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: inline-block; padding: 4px 10px; background: var(--accent-soft); border-radius: 6px; margin-bottom: 14px; }
+  .card h3 { font-size: 18px; margin: 0 0 8px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .card code { font-family: var(--mono); color: var(--accent); }
+
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 460px; background: var(--surface); }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  td code { font-family: var(--mono); color: var(--accent); font-size: 13px; }
+  td.role { color: var(--muted); }
+  .conv-note { color: var(--muted); margin-bottom: 20px; }
+  .conv-note code { font-family: var(--mono); color: var(--accent); font-size: 13px; }
+
+  pre.code { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.7; margin: 0 0 16px; color: var(--ink); }
+  pre.code .c { color: var(--muted); }
+  pre.code .p { color: var(--accent); }
+  .use-note { color: var(--muted); margin: 16px 0 10px; }
+
+  footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+  footer a { color: var(--accent); text-decoration: none; }
+  a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<nav class="sitenav"><div class="sn-inner">
+  <a class="sn-brand" href="/"><span class="slash">/</span>Bowtie&nbsp;Funnel&nbsp;Resources</a>
+  <a class="sn-tab active" href="/">Skills</a>
+  <a class="sn-tab" href="/tools/">Tools</a>
+  <a class="sn-tab" href="/workflows/">Workflows</a>
+</div></nav>
+
+<div class="wrap">
+  <p class="eyebrow"><a href="/">Skills</a> <span class="sep">/</span> agent-anatomy</p>
+  <h1><span class="slash">/</span>agent-anatomy</h1>
+  <p class="lede">Most AI agents start as a pile of loose files — a prompt, a few scripts, a cron job, some notes, all in one directory.</p>
+  <p class="lede"><strong>agent-anatomy gives them a shape.</strong> One agent = one folder; every capability is a file in a conventionally-named place — in any language.</p>
+
+  <div class="meta">
+    <span class="chip mit" tabindex="0">MIT</span>
+    <span class="chip" tabindex="0">Claude&nbsp;Code skill</span>
+    <span class="chip" tabindex="0">scaffold&nbsp;+&nbsp;reorganize</span>
+    <span class="chip" tabindex="0">never deletes</span>
+  </div>
+
+  <section aria-label="Before and after">
+    <div class="transform">
+      <div class="panel before">
+        <div class="panel-head"><span class="dot"></span>before — a junk drawer</div>
+<div class="tree">
+<span class="row" style="animation-delay:.02s">support-bot/</span><span class="row" style="animation-delay:.06s">├── prompt.txt</span><span class="row" style="animation-delay:.10s">├── refund_tool.py</span><span class="row" style="animation-delay:.14s">├── lookup-order.py</span><span class="row" style="animation-delay:.18s">├── how_to_escalate.md</span><span class="row" style="animation-delay:.22s">├── daily_report.py</span><span class="row" style="animation-delay:.26s">├── slack.py</span><span class="row" style="animation-delay:.30s">├── utils.py</span><span class="row" style="animation-delay:.34s">└── notes.txt</span>
+</div>
+      </div>
+
+      <div class="arrow" aria-hidden="true">→</div>
+
+      <div class="panel after">
+        <div class="panel-head"><span class="dot"></span>after — a labeled toolbox</div>
+<div class="tree">
+<span class="row" style="animation-delay:.40s">support-bot/</span><span class="row" style="animation-delay:.46s">├── <span class="dir">instructions.md</span></span><span class="row" style="animation-delay:.52s">├── tools/</span><span class="row" style="animation-delay:.56s">│&nbsp;&nbsp; ├── issue_refund.py</span><span class="row" style="animation-delay:.60s">│&nbsp;&nbsp; └── lookup_order.py</span><span class="row" style="animation-delay:.66s">├── skills/</span><span class="row" style="animation-delay:.70s">│&nbsp;&nbsp; └── how-to-escalate.md</span><span class="row" style="animation-delay:.76s">├── schedules/</span><span class="row" style="animation-delay:.80s">│&nbsp;&nbsp; └── daily_report.py</span><span class="row" style="animation-delay:.86s">├── channels/</span><span class="row" style="animation-delay:.90s">│&nbsp;&nbsp; └── slack.py</span><span class="row" style="animation-delay:.96s">├── lib/</span><span class="row" style="animation-delay:1.0s">│&nbsp;&nbsp; └── utils.py</span><span class="row" style="animation-delay:1.06s">└── <span class="kept">notes.txt</span> <span class="note">← left in place</span></span>
+</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Two modes, auto-detected</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">scaffold</span>
+        <h3>Empty folder → new agent</h3>
+        <p>Describe what the agent does. Get a real <code>instructions.md</code> plus only the capability folders that purpose needs — each with a working starter file. No empty placeholders.</p>
+      </div>
+      <div class="card">
+        <span class="tag">reorganize</span>
+        <h3>Messy folder → clean layout</h3>
+        <p>It classifies every file and shows a move plan first. Nothing moves until you approve, and nothing is ever deleted — just relocated and renamed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The convention</h2>
+    <p class="prose conv-note">Names come from file paths, not config. <code>tools/issue_refund.py</code> <em>is</em> the tool <code>issue_refund</code>.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>A file that…</th><th>goes in</th></tr></thead>
+        <tbody>
+          <tr><td class="role">is the system prompt</td><td><code>instructions.md</code> <span style="color:var(--muted);font-size:12px">· required</span></td></tr>
+          <tr><td class="role">does a discrete action the agent invokes</td><td><code>tools/</code></td></tr>
+          <tr><td class="role">is a procedure followed on demand</td><td><code>skills/</code></td></tr>
+          <tr><td class="role">runs on a timer / cron</td><td><code>schedules/</code></td></tr>
+          <tr><td class="role">receives inbound messages</td><td><code>channels/</code></td></tr>
+          <tr><td class="role">calls an outbound API / service</td><td><code>connections/</code></td></tr>
+          <tr><td class="role">is a nested agent</td><td><code>subagents/</code></td></tr>
+          <tr><td class="role">is durable state read back later</td><td><code>memory/</code></td></tr>
+          <tr><td class="role">is shared helper code</td><td><code>lib/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Install &amp; use</h2>
+    <pre class="code"><span class="c"># copy the skill into your Claude Code skills directory</span>
+cp -r skills/agent-anatomy ~/.claude/skills/</pre>
+    <p class="prose use-note">Then invoke it directly, or just say what you want:</p>
+    <pre class="code"><span class="p">/agent-anatomy</span>
+
+<span class="c"># or, in plain language —</span>
+<span class="c"># "organize this agent folder"</span>
+<span class="c"># "scaffold a new agent that answers support tickets"</span></pre>
+  </section>
+
+  <footer>
+    <span>Bowtie Funnel Resources · MIT</span>
+    <span><a href="https://github.com/bowtiefunnel/bowtie-funnel-resources">github.com/bowtiefunnel</a></span>
+  </footer>
+</div>
+</body>
+</html>

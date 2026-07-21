@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>workflows.io × Bowtie Funnel — 48 GTM Workflows</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --surface-2: #fafbfc;
+    --ink: #1a2230;
+    --ink-soft: #4a5568;
+    --ink-faint: #6b7688;
+    --line: #e2e6ec;
+    --line-strong: #cdd4de;
+    --accent: #1f9d6b;        /* bowtie green */
+    --accent-ink: #0f6b46;
+    /* bowtie stage hues — left (acquisition) cool → right (post-sale) warm */
+    --s-aware: #3b82c4;   --s-aware-bg: #e8f1fa;
+    --s-edu:   #1f9d8f;   --s-edu-bg:   #e2f4f1;
+    --s-sel:   #1f9d6b;   --s-sel-bg:   #e3f4ec;
+    --s-commit:#c99a1e;   --s-commit-bg:#f8f0d9;
+    --s-onb:   #d97a2b;   --s-onb-bg:   #fbeadd;
+    --s-ret:   #c74b6b;   --s-ret-bg:   #f9e5eb;
+    --s-exp:   #8256c4;   --s-exp-bg:   #efe8f8;
+    --s-ops:   #6b7688;   --s-ops-bg:   #eceef2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f141b; --surface: #171d26; --surface-2: #1c232e;
+      --ink: #e7ecf2; --ink-soft: #aab4c2; --ink-faint: #7d8998;
+      --line: #262f3b; --line-strong: #33404f;
+      --accent: #35c88c; --accent-ink: #6fe0b0;
+      --s-aware-bg:#12283b; --s-edu-bg:#0f2e2b; --s-sel-bg:#0f2f22;
+      --s-commit-bg:#322a12; --s-onb-bg:#331f12; --s-ret-bg:#331521; --s-exp-bg:#241732; --s-ops-bg:#20262f;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg:#f4f5f7; --surface:#ffffff; --surface-2:#fafbfc;
+    --ink:#1a2230; --ink-soft:#4a5568; --ink-faint:#6b7688;
+    --line:#e2e6ec; --line-strong:#cdd4de; --accent:#1f9d6b; --accent-ink:#0f6b46;
+    --s-aware-bg:#e8f1fa; --s-edu-bg:#e2f4f1; --s-sel-bg:#e3f4ec;
+    --s-commit-bg:#f8f0d9; --s-onb-bg:#fbeadd; --s-ret-bg:#f9e5eb; --s-exp-bg:#efe8f8; --s-ops-bg:#eceef2;
+  }
+  :root[data-theme="dark"] {
+    --bg:#0f141b; --surface:#171d26; --surface-2:#1c232e;
+    --ink:#e7ecf2; --ink-soft:#aab4c2; --ink-faint:#7d8998;
+    --line:#262f3b; --line-strong:#33404f; --accent:#35c88c; --accent-ink:#6fe0b0;
+    --s-aware-bg:#12283b; --s-edu-bg:#0f2e2b; --s-sel-bg:#0f2f22;
+    --s-commit-bg:#322a12; --s-onb-bg:#331f12; --s-ret-bg:#331521; --s-exp-bg:#241732; --s-ops-bg:#20262f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1340px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  header { margin-bottom: 28px; }
+  .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); font-weight: 600; }
+  h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.1; margin: 8px 0 10px; text-wrap: balance; letter-spacing: -.02em; }
+  .lede { color: var(--ink-soft); max-width: 70ch; font-size: 15px; }
+  .lede a { color: var(--accent-ink); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 6px; }
+  .legend .note { flex-basis: 100%; font-size: 12px; color: var(--ink-faint); margin-bottom: 4px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600;
+    padding: 5px 11px; border-radius: 999px; border: 1px solid transparent; cursor: pointer;
+    color: var(--ink); background: var(--surface-2); user-select: none; transition: transform .08s;
+  }
+  .chip:active { transform: translateY(1px); }
+  .chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .chip[aria-pressed="false"] { opacity: .38; }
+  .chip.all { background: var(--ink); color: var(--surface); }
+  .chip.all[aria-pressed="false"] { opacity: .4; }
+
+  .meta { display:flex; gap:18px; align-items:baseline; margin: 14px 2px 18px; font-size: 13px; color: var(--ink-faint); }
+  .meta b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .tablecard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 1080px; }
+  thead th {
+    position: sticky; top: 0; z-index: 3; background: var(--surface-2); color: var(--ink-faint);
+    text-align: left; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700;
+    padding: 13px 16px; border-bottom: 1px solid var(--line-strong); white-space: nowrap;
+  }
+  tbody td { padding: 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface-2); }
+
+  .c-wf { width: 17%; min-width: 190px; }
+  .c-desc { width: 24%; min-width: 230px; }
+  .c-stage { width: 12%; min-width: 128px; }
+  .c-tools { width: 17%; min-width: 170px; }
+  .c-steps { width: 30%; min-width: 300px; }
+
+  .wf-title { font-weight: 650; font-size: 14.5px; line-height: 1.25; margin: 0 0 4px; letter-spacing: -.01em; }
+  .wf-title a { color: var(--ink); text-decoration: none; }
+  .wf-title a:hover { color: var(--accent-ink); text-decoration: underline; }
+  .wf-cats { font-size: 11px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .05em; }
+  .desc { font-size: 13px; color: var(--ink-soft); }
+
+  .stages { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; }
+  .stage {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600;
+    padding: 3px 9px 3px 8px; border-radius: 6px; white-space: nowrap; color: var(--ink);
+  }
+  .stage .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .stage.primary { box-shadow: inset 0 0 0 1.5px currentColor; }
+  .stage.primary .lbl { }
+
+  .tools { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tool { font-size: 11.5px; padding: 2px 7px; border-radius: 5px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-soft); }
+  .tool-count { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+
+  ol.steps { margin: 0; padding-left: 20px; font-size: 12.5px; color: var(--ink-soft); }
+  ol.steps li { margin-bottom: 5px; }
+  ol.steps li b { color: var(--ink); font-weight: 600; }
+
+  footer { margin-top: 26px; font-size: 12px; color: var(--ink-faint); }
+  .hidden { display: none; }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 24px 12px 60px; }
+  }
+</style>
+
+<style id="sitenav-css">
+.sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.sn-inner{max-width:1340px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
+.sn-brand{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:600;font-size:14px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;margin-right:auto;white-space:nowrap;}
+.sn-brand .slash{color:var(--accent);}
+.sn-tab{font-family:system-ui,-apple-system,sans-serif;font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
+.sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+.sn-tab.active{opacity:1;color:var(--accent);font-weight:600;}
+@media(max-width:520px){.sn-brand{font-size:12px;}.sn-tab{padding:6px 7px;font-size:12.5px;}}
+</style>
+</head>
+<body>
+<nav class="sitenav"><div class="sn-inner">
+  <a class="sn-brand" href="/"><span class="slash">/</span>Bowtie&nbsp;Funnel&nbsp;Resources</a>
+  <a class="sn-tab" href="/">Skills</a>
+  <a class="sn-tab" href="/tools/">Tools</a>
+  <a class="sn-tab active" href="/workflows/">Workflows</a>
+</div></nav>
+
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Competitive teardown · workflows.io</div>
+    <h1>48 GTM Workflows, mapped to the Bowtie Funnel</h1>
+    <p class="lede">Every playbook and template published on <a href="https://www.workflows.io/workflows">workflows.io/workflows</a>, placed at its stage in the customer lifecycle — Awareness → Education → Selection → Mutual&nbsp;Commit → Onboarding → Retention → Expansion — with the tools each names and its own step sequence. The outlined stage is each workflow's <b>primary</b> stage; softer chips show where it also reaches. Click a stage to filter.</p>
+  </header>
+
+  <div class="legend" id="legend">
+    <div class="note">Filter by lifecycle stage (a workflow appears if it touches the selected stage):</div>
+    <button class="chip all" data-stage="ALL" aria-pressed="true">All 48</button>
+  </div>
+
+  <div class="meta">
+    <span>Showing <b id="count">48</b> of 48</span>
+    <span>Source scraped 2026-07-20 · descriptions & steps verbatim from each page</span>
+  </div>
+
+  <div class="tablecard">
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="c-wf">Workflow</th>
+            <th class="c-desc">What it does</th>
+            <th class="c-stage">Bowtie stage</th>
+            <th class="c-tools">Tools named</th>
+            <th class="c-steps">Steps</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    Stage placement is an interpretation of each workflow's intent against the Bowtie Funnel lifecycle, not a label from workflows.io (their own tags are ABM / Content / Outbound / RevOps). “Cross-stage” = RevOps infrastructure, attribution, or internal tooling that isn't tied to one lifecycle stage.
+  </footer>
+</div>
+
+<script>
+const STAGES = {
+  Awareness:    {dot:'var(--s-aware)',  bg:'var(--s-aware-bg)'},
+  Education:    {dot:'var(--s-edu)',    bg:'var(--s-edu-bg)'},
+  Selection:    {dot:'var(--s-sel)',    bg:'var(--s-sel-bg)'},
+  "Mutual Commit":{dot:'var(--s-commit)',bg:'var(--s-commit-bg)'},
+  Onboarding:   {dot:'var(--s-onb)',    bg:'var(--s-onb-bg)'},
+  Retention:    {dot:'var(--s-ret)',    bg:'var(--s-ret-bg)'},
+  Expansion:    {dot:'var(--s-exp)',    bg:'var(--s-exp-bg)'},
+  "Cross-stage":{dot:'var(--s-ops)',    bg:'var(--s-ops-bg)'}
+};
+const ORDER = Object.keys(STAGES);
+
+const DATA = [
+ {t:"ABM Playbook 2026", s:"abm-playbook", cats:"ABM", stages:["Awareness","Education","Selection"],
+  d:"A data-driven GTM system that reverse-engineers the ICP from CRM wins and losses, builds and tiers the TAM, maps stakeholders, tracks multi-layer signals, and orchestrates coordinated demand-gen plays.",
+  tools:["Apollo","Ocean.io","Clay","HubSpot","Salesforce","Outreach","Amplitude","Warmly","RB2B","Crossbeam","Nooks","AI Ark","Sales Navigator","LinkedIn","G2","Jungler.ai","Crunchbase","+more"],
+  steps:["Build the ICP model — extract win/loss patterns from CRM","Backtest ICP — firmographics, technographics, fit signals","Build broad TAM map — source & aggregate in Clay","Enrich & AI-qualify accounts","Score & tier accounts (T1/2/3), push to CRM","Sync T1/2 to LinkedIn/HubSpot Ads, build committee audiences","Source contacts & map stakeholders","Stand up signal-tracking infrastructure","Lead scoring — awareness stages + CRM events","Run coordinated 1:1 & 1:many demand-gen plays","Push engagement & signals back to CRM"]},
+
+ {t:"Account Sourcing Playbook", s:"account-sourcing-playbook", cats:"Outbound, RevOps", stages:["Awareness"],
+  d:"A workflow that maps the market, qualifies accounts and contacts, and activates them inside the CRM.",
+  tools:["Discolike","Clay","Ocean.io","HubSpot","LinkedIn","Serper","AI Ark"],
+  steps:["Create broad TAM map — filtered lookalike company list","Qualify companies with AI in Clay","Source contacts — decision makers, champions, influencers","Enrich, normalize, score tiers, segment","Sync to CRM — match, create/update, push scores"]},
+
+ {t:"Automated Cold Outbound (Claude Code)", s:"automated-cold-outbound-playbook-using-claude-code", cats:"Outbound, RevOps", stages:["Awareness","Education"],
+  d:"A workflow that uses Claude Code to run the full cold-outbound motion from strategy to campaign launch into Instantly and HeyReach.",
+  tools:["Miro","Clay","Claude Code","Apollo","Ocean.io","AI Ark","RB2B","Jungler.ai","Fibbler","Instantly"],
+  steps:["Map the strategy in Miro","List building — cold ICP + signal lists","Data enrichment via Claude Code into Clay","Segmentation by motion type","Account tiering (T1/2/3) via Claude Code","Copywriting — per-account variants via Claude Code","Campaign setup & launch to Instantly + HeyReach"]},
+
+ {t:"Automated LinkedIn-to-Blog Publishing", s:"automated-linkedin-to-blog-publishing-playbook", cats:"RevOps", stages:["Awareness","Education"],
+  d:"A workflow that monitors top LinkedIn creators, converts their best posts into brand-voiced blogs with Claude, stores them in Notion for approval, and auto-publishes to Webflow.",
+  tools:["Notion","Claude","Jungler.ai","Webflow"],
+  steps:["Identify top creators to monitor","Set up monitoring in Jungler AI → Notion","Create LinkedIn Posts database","Create Blogs database","Schedule daily blog writer (Cowork + Notion MCP)","Write blogs into the database","Review & approve","Trigger publish webhook","Publish to Webflow via MCP"]},
+
+ {t:"Automated News Publishing", s:"automated-news-publishing-playbook", cats:"RevOps", stages:["Awareness","Education"],
+  d:"A workflow that sources daily news on any topic, stores it in Notion for approval, and auto-publishes approved stories to Webflow using Claude Cowork and MCP-triggered webhooks.",
+  tools:["Notion","Claude","Webflow"],
+  steps:["Schedule daily news task (top 10 stories)","Define Notion database schema","Push daily news into Notion via MCP","Manually review & approve","Trigger publish webhook","Publish to Webflow"]},
+
+ {t:"Automated Outbound Reply Enrichment (Template)", s:"automated-outbound-reply-enrichment-template", cats:"RevOps", stages:["Education","Selection"],
+  d:"A template that turns interested outbound replies into enriched, CRM-ready contacts with Slack alerts.",
+  tools:["Instantly","Clay","BetterContact","Claude","HubSpot","ChatGPT","Slack"],
+  steps:["Understand the reply-enrichment flow","Create a Clay table from template","Connect Instantly replies to Clay webhook","Verify the webhook with a test reply","Add BetterContact key for phone enrichment","Connect HubSpot to Clay","Connect Slack for alerts"]},
+
+ {t:"Awareness Scoring Playbook 2026", s:"awareness-scoring-playbook", cats:"Outbound, ABM", stages:["Awareness","Education","Selection"],
+  d:"A workflow that tracks account activity across channels and converts it into clear awareness stages that sales and marketing can act on.",
+  tools:["HubSpot","Warmly","Clay","Outreach","Salesloft","Instantly","HeyReach","Fibbler","ZenABM","LinkedIn","Jungler.ai","+more"],
+  steps:["Define account-level awareness stages","Define variables for Aware / Interested / Evaluating","Build & qualify TAM in Clay, sync to HubSpot","Track & aggregate signals in one Clay workbook","Sync signals to CRM as custom events","Create HubSpot lists per awareness stage","Create HubSpot workflow to update stage","Use Clay + Claude for stage-change summaries"]},
+
+ {t:"Competitor Company Page Followers", s:"competitor-company-page-followers-playbook", cats:"RevOps, Outbound", stages:["Awareness","Education"],
+  d:"A workflow that turns competitor LinkedIn page followers into qualified, scored leads and routes high-priority profiles into outbound outreach.",
+  tools:["Clay","Findymail","Instantly","HeyReach","LinkedIn","ChatGPT"],
+  steps:["Extract competitor page followers (Apify)","Route follower data into Clay","Enrich company & contact data","AI-based qualification","Score leads (T1/2/3) with reasons","Route T1 to outreach (Instantly, HeyReach, Slack)","Route T2/3 to automated Instantly sequencer"]},
+
+ {t:"Complete Outbound Playbook 2026", s:"complete-outbound-playbook", cats:"Outbound", stages:["Awareness","Education"],
+  d:"A workflow that combines signal-driven automation and disciplined manual outreach across email, LinkedIn, and calls to consistently generate pipeline and revenue.",
+  tools:["Findymail","Instantly","Clay","Ocean.io","Discolike","Zenrows","BuiltWith","Apify","Teamfluence","HeyReach","HubSpot","Beehiiv","Warmly","BetterContact","Jungler"],
+  steps:["Email campaigns — evergreen trigger-based sequences (Instantly)","LinkedIn campaigns — social listening, multi-threading, visitor follow-up","Manual prospecting — 60 min/day on curated accounts","Cold calling — warm & semi-warm lists"]},
+
+ {t:"Custom Web Scraping (Python)", s:"custom-web-scraping-playbook-using-python", cats:"RevOps", stages:["Awareness"],
+  d:"A workflow that uses Python-based scraping to extract clean, structured data from public websites with full control.",
+  tools:["Claude","VS Code","Cursor"],
+  steps:["Set up the Python environment","Save the scraping script locally","Configure the target website","Run the scraper","Review the scraped output","(Optional) Customize scraping logic","(Optional) Handle failures & iterate"]},
+
+ {t:"Data-Trained AI Content Engine", s:"data-trained-ai-content-engine-playbook", cats:"Content, RevOps", stages:["Awareness","Education"],
+  d:"Build a niche-specific AI content engine trained on thousands of real high-performing posts to generate data-backed, non-generic content.",
+  tools:["Claude","Apify","Cursor"],
+  steps:["Select target creators (dataset)","Scrape & aggregate content (Apify)","Clean & structure data (Cursor)","Generate structured assets (CSV, graphics)","Run deep content analysis (Claude)","Build the custom AI content engine (Claude Project)"]},
+
+ {t:"The 2026 GTM Flywheel Playbook", s:"gtm-flywheel-playbook", cats:"Outbound, Content, ABM, RevOps", stages:["Awareness","Education","Selection","Mutual Commit","Retention","Expansion"],
+  d:"A practical, modular playbook for building a GTM flywheel that replaces linear funnels with a momentum-driven system across Traffic, Capture, Nurture, Qualification, Conversion, and Retention.",
+  tools:["Clay","Findymail","Freckle","HeyReach","Instantly","RB2B","Warmly","Sybill","Figma","HubSpot","Claude","Amplitude","Customer.io","Beehiiv","Crossbeam","Jungler.ai","LinkedIn","Chilipiper"],
+  steps:["Traffic generation — 4 channels","Lead capturing — 4 de-anon mechanisms","Lead nurturing — 10 trust-building touchpoints","Conversion — 6 on-site elements","Qualification — AI scoring + smart forms","Retention & expansion — CS, enablement, advocacy loops"]},
+
+ {t:"GTM Roadmap 2026", s:"gtm-roadmap-2026", cats:"Outbound, ABM", stages:["Awareness","Education","Selection","Mutual Commit","Onboarding","Retention","Expansion"],
+  d:"A workflow that maps and connects every stage of a modern GTM funnel from traffic generation through retention and expansion.",
+  tools:["Apollo","Jungler.ai","Tally","HubSpot","Clay","Cargo","Freckle","Claude Code","Nooks","Instantly","Amplitude","Posthog","ChilliPiper","Default.com","Ergo","Qwilr"],
+  steps:["Traffic generation — 2+ channels in parallel","Lead capture — multiple entry points","Lead nurture — digital, website, field marketing","Data routing — enrich & sync to CRM","Qualification — auto-score & tier by ICP fit","Sales-led conversion — route each tier","Close, retain & expand — 4 separate pipelines"]},
+
+ {t:"HubSpot Account Tiering & Scoring", s:"hubspot-account-tiering-scoring-playbook", cats:"RevOps", stages:["Education","Selection"],
+  d:"How to segment, score, and assign account tiers in HubSpot using CRM data and enrichment to prioritize high-value opportunities.",
+  tools:["HubSpot","Clay","Findymail","ChatGPT"],
+  steps:["Analyze CRM data (Closed Won/Lost)","Define account segmentation & 3-tier structure","Build Clay data model","Enrich accounts & assign tiers","Sync data to HubSpot","Build HubSpot automation workflows","Monitor & optimize"]},
+
+ {t:"HubSpot Custom Code Workflow", s:"hubspot-custom-code-workflow", cats:"RevOps", stages:["Cross-stage"],
+  d:"A workflow that extends HubSpot beyond native actions using custom code, private apps, and external APIs — bulk associations, AI scoring, cross-object syncs.",
+  tools:["HubSpot"],
+  steps:["Create a private app","Configure scopes","Add the custom code action","Define inputs & outputs (≤25)","Write the code (base template)","Test before activating","Apply to common use cases"]},
+
+ {t:"Human-in-the-Loop Content OS", s:"human-in-the-loop-content-operating-system", cats:"Content", stages:["Awareness","Education"],
+  d:"A workflow that uses AI to support human research, writing, design, and distribution to consistently produce high-quality content at scale.",
+  tools:["Sybill","Beehiiv","Perplexity","Claude","Figma","Notion","Adobe","Favikon","Magicpost.in","LinkedIn","Webflow","Buffer"],
+  steps:["Content ideation","Content drafting (AI-assisted)","Content development (writers, design, video)","Content management (Notion system of record)","Distribution (LinkedIn, beehiiv, Webflow, Buffer)","Performance analysis & repurposing"]},
+
+ {t:"ICP Modeling Guide", s:"icp-modeling-guide", cats:"ABM, RevOps, Outbound", stages:["Awareness"],
+  d:"A practical, data-driven workflow for building, validating, and operationalizing an ICP model that every GTM team can actually use in the field.",
+  tools:["Clay","n8n","Sybill","Claude Code","HubSpot"],
+  steps:["Download closed deals from CRM (12–18 mo)","Enrich every account (Clay)","Analyze through an LLM (Claude Code)","Define Tier 3 baseline criteria","Pick your Ideal 150 (Tier 1)","Design Tier 2 criteria","Backtest the model"]},
+
+ {t:"Inbound Orchestration 2026", s:"inbound-orchestration", cats:"RevOps", stages:["Education","Selection","Mutual Commit"],
+  d:"A complete 2026 inbound engine that automates capture, qualification, routing, enrichment, and meeting prep to create a zero-leakage, high-velocity pipeline.",
+  tools:["Clay","Findymail","BetterContact","Sybill","Tally","HubSpot","Beehiiv","Cal.com","Customer.io","Claude","Webflow","Slack"],
+  steps:["Capture & initial qualification (forms)","Lead routing (Cal, Clay, HeyReach)","Approving leads (Slack cards)","Deep enrichment (BetterContact, Findymail, Claude)","CRM sync & prep (auto deal creation)","Meeting execution & intelligence (Sybill)"]},
+
+ {t:"LinkedIn Ads Playbook", s:"linkedin-ads-playbook", cats:"RevOps", stages:["Awareness","Education","Selection"],
+  d:"A workflow that builds a 3-layer LinkedIn ads engine coordinated with outbound to warm target accounts and lift reply rates 1.5–2×.",
+  tools:["Clay","Apollo","AI Ark","Instantly","HubSpot","Fibbler","Factors.ai","n8n"],
+  steps:["Validate the fit (ACV, ICP, TAM)","Build the matched audience","Launch awareness layer (wks 1–8)","Launch consideration layer (wks 4–8)","Launch conversion layer (lead-gen, DMs, email)","Build 3–4 creatives per ad set","Track attribution (Fibbler/Factors)","Automate manual work in n8n"]},
+
+ {t:"LinkedIn Brand Mentions Outbound", s:"linkedin-brand-mentions-outbound-playbook", cats:"Content, RevOps, Outbound", stages:["Awareness","Education"],
+  d:"A workflow that monitors LinkedIn brand mentions, enriches and scores engaged accounts, and routes high-priority conversations into outbound outreach.",
+  tools:["Clay","HeyReach","Instantly","Slack","ChatGPT"],
+  steps:["Choose brand keywords to track","Capture LinkedIn post URLs (Clay → Slack)","Track engagement on mention posts","Enrich company & contact data","AI qualification (ChatGPT in Clay)","Score qualified leads (T1/2/3)","Route T1 to outreach","Route T2/3 to automated sequencers"]},
+
+ {t:"LinkedIn Content OS (90-Day Template)", s:"linkedin-content-operating-system-90-day-template", cats:"Content", stages:["Awareness","Education"],
+  d:"A structured 90-day template for testing, validating, and scaling LinkedIn content to build authority and generate consistent inbound.",
+  tools:["Claude","ChatGPT","LinkedIn"],
+  steps:["Define your persona","Understand content categories (TOFU/MOFU/BOFU)","Follow a weekly posting cadence","Use post descriptions & examples","Add your POV","Track performance weekly","Repurpose high-performing content","Repeat & refine the system"]},
+
+ {t:"LinkedIn Content Playbook 2026", s:"linkedin-content-playbook", cats:"Content, Outbound", stages:["Awareness","Education"],
+  d:"A framework for an AI-native operating model — assigning strategy to humans and deploying agents across content, GTM, sales, and customer success.",
+  tools:["Claude","Clay","Sybill","Teamfluence","Beehiiv","Ai Ark","Jungler","LinkedIn"],
+  steps:["LinkedIn profile optimization","Audience building (Clay, AI Ark, HeyReach)","Create content strategy (Claude, Perplexity)","Content types by funnel stage","Visual formats","Operationalize production (Ordinal)","Capture & convert leads (Cal.com)"]},
+
+ {t:"LinkedIn Content × Claude Code", s:"linkedin-content-x-claude-code", cats:"—", stages:["Awareness","Education"],
+  d:"A workflow that uses 10 Claude Code skills across ideation, drafting, design, QA, and analytics to produce LinkedIn content at scale without sacrificing human creativity.",
+  tools:["Claude Code","Ergo","Notion"],
+  steps:["Ideate the post (Pinecone + Ergo mining)","Draft the post — 3 variants in Notion","Design the graphic (UI mockups)","QA the post — score, fact-check, schedule","Analyze performance & repurpose"]},
+
+ {t:"LinkedIn Notion Dashboard (Template)", s:"linkedin-notion-dashboard---template", cats:"Content", stages:["Awareness","Education"],
+  d:"A Notion-based system to plan, create, track, and scale LinkedIn content with structure, consistency, and clear execution.",
+  tools:["Claude","Notion","ChatGPT","LinkedIn"],
+  steps:["Understand the dashboard","Duplicate the Notion template","Review the dashboard structure","Set the content foundation","Optimize your LinkedIn profile","Set up brandbook & design assets","Centralize external links","Manage content (kanban view)","Create & manage post ideas","Use the 90-day content plan"]},
+
+ {t:"LinkedIn Social Selling Playbook 2026", s:"linkedin-social-selling-playbook", cats:"Content, Outbound", stages:["Awareness","Education","Selection","Mutual Commit"],
+  d:"A complete playbook for turning LinkedIn into a full-funnel B2B acquisition system.",
+  tools:["Teamfluence","Magicpost.in","Jungler.ai","Ergo","LinkedIn","Kondo"],
+  steps:["Build your ICP-aligned audience","Warm the audience you built","Publish TOFU content","Publish MOFU content","Publish BOFU content (proof)","Capture warm signals in CRM","Convert warm attention into meetings","Run the LinkedIn flywheel","Avoid common pitfalls","Make content your #1 GTM channel"]},
+
+ {t:"Meeting Form Orchestration Playbook", s:"meeting-form-orchestration-playbook", cats:"RevOps", stages:["Selection","Mutual Commit"],
+  d:"Captures meeting-form submissions, enriches and qualifies contacts, syncs to CRM, and routes qualified prospects to the right rep for outreach.",
+  tools:["HubSpot","BetterContact","Clay","Tally","Slack","ChatGPT"],
+  steps:["Capture form submissions (Tally → Clay)","Enrich missing data","Lookup company & contact in CRM","Route existing companies (persona QA)","Handle new companies (ICP QA)","Enrich & create company","Assign account ownership (Slack)","Perform outreach (Instantly, HeyReach)"]},
+
+ {t:"Meeting Form Orchestration Template", s:"meeting-form-orchestration-template", cats:"RevOps, ABM", stages:["Selection","Mutual Commit"],
+  d:"Captures website demo requests as high-intent signals, enriches contact and company data, and routes them to the right owner in the CRM.",
+  tools:["Clay","HubSpot","Findymail","Webflow","ChatGPT"],
+  steps:["Capture demo requests (webhook → Clay)","Enrich missing data","Normalize records","Lookup company in CRM","Route existing companies (Slack owner)","Validate new companies","Create CRM record","Update CRM with enrichment"]},
+
+ {t:"Multi-Thread Inbound Leads", s:"multi-thread-inbound-leads-playbook", cats:"RevOps, Outbound", stages:["Education","Selection"],
+  d:"A workflow that captures inbound signups, qualifies and scores them in Clay, and routes high-fit accounts into tiered outreach and real-time notifications.",
+  tools:["Clay","Findymail","Apollo","Ai Ark","ChatGPT","Slack"],
+  steps:["Capture inbound signups (webhook)","Route & enrich in Clay","Normalize data structure","AI qualification","Lead scoring (T1/2/3)","Multi-thread T1 accounts (extra contacts)","Manual outreach for T1 (HeyReach)","Automate T2/3 (Instantly)","Slack reply notifications"]},
+
+ {t:"Niche TAM Mapping & CRM Automation", s:"niche-tam-mapping-and-crm-automation-playbook", cats:"RevOps, Outbound", stages:["Awareness","Education"],
+  d:"A step-by-step system to find lookalike companies, qualify and score them with AI, source the right contacts, and activate tiered outbound at scale.",
+  tools:["Clay","HubSpot","Gamma","TheSwarm","Discolike","Ocean.io","Claude","Instantly","HeyReach","Apollo","Ai Ark","ChatGPT"],
+  steps:["Identify lookalike companies","Route & standardize company data","AI qualification","Lead scoring (T1/2/3)","Source contacts","Enrich contact data","Personalized outreach for T1","Scaled outreach for T2/3","Update CRM automatically","Monitor results & optimize"]},
+
+ {t:"Organic LinkedIn Lead Generation", s:"organic-linkedin-lead-generation-playbook", cats:"Outbound, Content", stages:["Awareness","Education","Mutual Commit"],
+  d:"A structured LinkedIn growth system that optimizes profile positioning, turns content into inbound signals, qualifies leads with AI, and converts engagement into booked meetings.",
+  tools:["Figma","Apollo","Tally","Notion","Clay","RB2B","Cal.com","HubSpot","Sybill","HeyReach","Instantly","Beehiiv","Customer.io","Adobe","Favikon","Kondo","Jungler.ai","Slack","LinkedIn"],
+  steps:["Profile optimization","Lead magnet offer (Tally capture)","Design system (Figma/Adobe)","Anatomy of a LinkedIn post","Capture engagement signals into Clay","AI qualification + CRM lookup","Perform outreach (Instantly, HeyReach)","Monitoring — Slack alerts, Kondo, Cal.com"]},
+
+ {t:"Outbound Attribution Playbook 2026", s:"outbound-attribution-playbook", cats:"Outbound, RevOps", stages:["Cross-stage"],
+  d:"A modern framework that fixes outbound attribution by tracking silent conversions, connecting outreach tools to the CRM, and revealing outbound's true multi-touch revenue impact.",
+  tools:["OutboundSync","Instantly","HeyReach","HubSpot","Slack"],
+  steps:["Connect OutboundSync to outreach tools","Create two core HubSpot properties","Auto-tag contacts & companies","Track signups → tie back to outbound","Automate deal stages & reporting","Capture the 'hidden' outbound impact","Turn outbound into a measurable engine"]},
+
+ {t:"Automated Outbound Playbook 2026", s:"outbound-playbook", cats:"Outbound", stages:["Awareness","Education"],
+  d:"A structured automated-outbound framework that defines the ICP, builds and qualifies account lists, personalizes messaging, and deploys multi-channel campaigns with tracking and optimization built in.",
+  tools:["Apollo","Ocean.io","Discolike","Apify","Clay","RB2B","Fibbler","TheirStack","Instantly","HeyReach","HubSpot","Storeleads","Octoparse","Aiark","Jungler.ai","Slack","Serper","Sumble"],
+  steps:["Create ICP model","Define campaign strategy (volume/micro/signal)","Source & enrich accounts","Source & segment contacts","Build copy & personalization (A/B)","Launch outreach (Instantly, HeyReach)","Reporting — reply rate, meetings, pipeline"]},
+
+ {t:"Product Sign-Up Outreach Playbook", s:"product-sign-up-outreach-playbook", cats:"Outbound, RevOps", stages:["Education","Selection"],
+  d:"Captures product signups, enriches contact and company data across a waterfall of providers in Clay, performs lead scoring, and routes each tier into the right outreach motion automatically.",
+  tools:["Clay","HubSpot","Findymail","HeyReach","Instantly","Slack"],
+  steps:["Capture product signups via webhook","Enrich contact (LinkedIn, Findymail)","Classify email type (work/personal)","Enrich company & associate to HubSpot","Lead scoring (T1/2/3)","Sync to HubSpot","Route into tiered outreach"]},
+
+ {t:"Scrape Influencers' LinkedIn Engagement", s:"scrape-influencers-linkedin-engagement-playbook", cats:"RevOps, Outbound", stages:["Awareness","Education"],
+  d:"A workflow that captures engagement and connections around industry influencers, qualifies the audience, and routes high-fit accounts into outbound outreach.",
+  tools:["Findymail","Clay","Instantly","HeyReach","LinkedIn","Jungler.ai","Slack","ChatGPT"],
+  steps:["Identify influencers to track","Capture engagement on their posts","Capture influencer connections","Route data into Clay","Enrich companies & contacts","AI qualification","Score qualified leads","Route T1 to high-touch outreach","Route T2/3 to automated sequencers"]},
+
+ {t:"Signal Activation Playbook", s:"signal-activation-playbook", cats:"RevOps, Outbound", stages:["Awareness","Education","Selection"],
+  d:"A workflow to capture, qualify, and activate high-intent buying signals using a structured workflow to drive pipeline.",
+  tools:["Salesforce","HubSpot","Customer.io","OutboundSync","Outreach","Amplitude","Warmly","RB2B","Clay","Crossbeam","Teamfluence","Apollo","BetterContact","Nooks","Instantly","HeyReach","LinkedIn","Chilipiper","G2","Capterra","+more"],
+  steps:["Capture signals from all sources","Aggregate into one system (Clay/Cargo)","Normalize & deduplicate","Enrich company & contact","Lookup records in CRM","Qualify accounts using AI","Score accounts into tiers","Segment accounts","Route signals to reps","Sync data to CRM","Activate — ads, sequences, DMs, alerts, tasks"]},
+
+ {t:"Cold Outreach Messaging Framework 2026", s:"the-cold-outreach-message-playbook", cats:"Outbound", stages:["Awareness"],
+  d:"A guide that breaks down cold-outreach messages into clear, repeatable components to write relevant, high-converting outbound copy.",
+  tools:["Claude","HeyReach","Instantly","ChatGPT"],
+  steps:["Write a strong first line","Build the body (1–4 components)","Add one clear call to action","Use the P.S. intentionally","Keep the message under 70–80 words"]},
+
+ {t:"The Content + Outbound Flywheel", s:"the-content-outbound-flywheel-playbook", cats:"Content, Outbound", stages:["Awareness","Education"],
+  d:"A full content-to-outbound flywheel: optimize your LinkedIn profile, build a content strategy from customer pain points, publish consistently, capture engagement signals, then build/qualify the outbound TAM and route all leads into HubSpot.",
+  tools:["Claude","Freckle","Apollo","Instantly","HeyReach","HubSpot","Browserbase","Ordinal","Slack"],
+  steps:["Optimize the LinkedIn profile","Build the content strategy (Ergo, Claude)","Run the content pipeline (2–3/wk, Ordinal)","Capture engagement signals (Jungler, Freckle)","Build the outbound TAM","Enrich & qualify accounts","Launch multi-channel outbound","Enrich & route inbound leads"]},
+
+ {t:"The Content RAG Agent Playbook", s:"the-content-rag-agent-playbook", cats:"Content, RevOps", stages:["Awareness","Education"],
+  d:"A workflow that feeds data into a database, connects it to a RAG agent built in n8n, and automatically produces content and video drafts from your knowledge base.",
+  tools:["Apify","n8n","Claude","Ergo","Clay","Beehiiv","ChatGPT","Jungler.ai","LinkedIn"],
+  steps:["Collect knowledge-base content","Set up the vector database (Pinecone)","Build the data-ingestion pipeline (n8n)","Configure the RAG agent","Connect social-listening signals","Connect Slack as the front end","Generate content drafts","Generate video drafts","Track performance"]},
+
+ {t:"The \"Customer Alumni\" Play", s:"the-customer-alumni-play", cats:"Outbound, RevOps", stages:["Awareness"],
+  d:"A workflow that turns former employees of your customers into outbound opportunities.",
+  tools:["Clay","Instantly","HeyReach","HubSpot","ChatGPT"],
+  steps:["Build the customer-alumni seed list","Find alumni in Clay (past employees)","Qualify their new companies","Score accounts for routing","Route to tiered outreach"]},
+
+ {t:"The Founder's Connections Playbook", s:"the-founder-connections-playbook", cats:"RevOps, Outbound", stages:["Awareness"],
+  d:"A workflow that routes founder LinkedIn connections into tiered outreach flows so high-priority leads get personal outreach and lower-priority leads scale automatically.",
+  tools:["Clay","Instantly","HeyReach","BetterContact","LinkedIn","ChatGPT"],
+  steps:["Export founder's LinkedIn connections","Qualify companies","Qualify contacts","Score leads using AI","Route into tiered outreach"]},
+
+ {t:"The PLG-to-Sales HubSpot Playbook", s:"the-plg-to-sales-hubspot-playbook", cats:"RevOps", stages:["Selection","Mutual Commit","Expansion"],
+  d:"A product-led sales playbook for HubSpot: map a product-aware data model, build custom objects, sync product/sign-up data, score accounts on fit and usage, and automate lead, deal, and outreach workflows from one workspace.",
+  tools:["HubSpot","Apollo","Slack","Chilipiper"],
+  steps:["Map the data model","Build custom objects","Sync product & sign-up data","Build a dual scoring model (fit + usage)","Configure the lead pipeline","Define stage exit criteria","Automate deal creation (3 pipelines)","Surface deal health automatically","Enable outreach from the workspace"]},
+
+ {t:"The 2026 Signal Playbook", s:"the-signal-playbook", cats:"RevOps, ABM", stages:["Awareness","Education","Selection","Retention","Expansion"],
+  d:"A complete guide to capturing, scoring, and activating intent signals across first-, second-, and third-party data to build a real-time, signal-driven GTM system.",
+  tools:["BuiltWith","TheirStack","Crossbeam","Clay","Amplitude","Customer.io","Beehiiv","Intercom","Salesloft","Calendly","HubSpot","Attio","Apify","Ahrefs","Salesforce","Outreach","Fibbler","LinkedIn","Jungler","+more"],
+  steps:["Define the purpose of your signal system","Map your signal categories","Instrument first-party signals","Add second-party signals","Layer third-party signals","Centralize all signals","Normalize & score into awareness stages","Enrich accounts & contacts","Trigger automations","Build ABM lists & post-sale monitors","Close the feedback loop"]},
+
+ {t:"The Social Listening Playbook", s:"the-social-listening-playbook", cats:"Outbound, RevOps", stages:["Awareness","Education"],
+  d:"A fully automated workflow that turns LinkedIn keyword engagements into high-intent outbound pipeline using RB2B, Clay, and AI scoring.",
+  tools:["BetterContact","Clay","Findymail","HeyReach","Instantly","n8n","Jungler","ChatGPT"],
+  steps:["Define keywords to monitor","Monitor & extract LinkedIn posts","Scrape engagement","Enrich company & contact data","Lead scoring (T1/2/3)","Route to tiered outreach"]},
+
+ {t:"Track Employees' LinkedIn Engagement", s:"track-your-employees-linkedin-engagement-playbook", cats:"Content, Outbound, RevOps", stages:["Awareness","Education"],
+  d:"A workflow that turns LinkedIn content, connections, profile visits, and engagement into qualified leads routed into tiered outbound outreach.",
+  tools:["Teamfluence","Instantly","HeyReach","Jungler.ai","LinkedIn","Slack","ChatGPT"],
+  steps:["Publish LinkedIn content (team)","Capture connection data","Track profile visitors (Teamfluence)","Track engagement signals (Jungler)","Route data into Clay","Enrich companies & contacts","AI qualification","Score leads in 3 tiers","Route T1 to high-touch outreach","Route T2/3 to automated (HeyReach)"]},
+
+ {t:"Vibe Coding Playbook (GTM App Building)", s:"vibe-coding-playbook-for-gtm-app-building", cats:"RevOps", stages:["Cross-stage"],
+  d:"A workflow that enables GTM teams to design, build, and iterate internal applications using AI tools without traditional coding.",
+  tools:["Claude","Lovable","VS Code","Cursor"],
+  steps:["Define the GTM app problem","Define the app specification","Use reference material","Convert requirements into a structured prompt","Validate the prompt","Generate the MVP (Lovable)","Set up the local environment","Iterate (Cursor / Claude Code)","Finalize the internal GTM app"]},
+
+ {t:"Warm Calling Playbook 2026", s:"warm-calling-playbook", cats:"Outbound, RevOps", stages:["Education","Selection"],
+  d:"A workflow that funnels six warm lead sources into Clay, scores and tiers every contact, then routes calling tasks into Nooks for parallel dialing.",
+  tools:["Clay","HubSpot","Nooks"],
+  steps:["Capture all warm lead sources","Sync sources into Clay","Enrich contacts & companies","Qualify every lead (Claygent)","Score & tier the accounts","Sync data to HubSpot","Enroll T1/T2 in calling sequences","Run parallel dials in Nooks","Build T1 account plans (Nooks AI)"]},
+
+ {t:"Website Visitor De-Anonymization Outbound", s:"website-visitor-de-anonymization-outbound-playbook", cats:"RevOps", stages:["Awareness","Education"],
+  d:"A workflow that identifies anonymous website visitors, qualifies prospects, and routes high-priority accounts into targeted outbound actions.",
+  tools:["Warmly","Clay","Instantly","HeyReach","Findymail","BetterContact","ChatGPT"],
+  steps:["Detect website visitors (Warmly)","Route visitor data into Clay","Enrich companies & contacts","Qualify & score visitors","Trigger T1 alerts & expand accounts","Execute tiered outbound outreach"]},
+
+ {t:"Website Visitor De-Anonymization Template", s:"website-visitor-de-anonymization-template", cats:"RevOps", stages:["Awareness","Education"],
+  d:"A workflow that captures website visitors, enriches company and contact data, scores accounts, and alerts GTM teams in real time for immediate follow-up.",
+  tools:["Warmly","Albacross","RB2B","Clay","Instantly","HeyReach","Slack"],
+  steps:["Add the tracking code snippet","Create a Clay table from template","Connect your de-anon tool to the webhook","Verify incoming visitor records","Enrich contact data","Enrich company data","Qualify & score companies","Trigger Slack alerts","Route prospects into outbound"]}
+];
+
+// sort by primary stage order, then title
+DATA.sort((a,b)=>{
+  const oa=ORDER.indexOf(a.stages[0]), ob=ORDER.indexOf(b.stages[0]);
+  return oa-ob || a.t.localeCompare(b.t);
+});
+
+const tbody=document.getElementById('tbody');
+const BASE="https://www.workflows.io/workflows/";
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+DATA.forEach(w=>{
+  const tr=el('tr'); tr.dataset.stages=w.stages.join('|');
+
+  const tdWf=el('td','c-wf');
+  tdWf.appendChild(el('div','wf-title',`<a href="${BASE}${w.s}" target="_blank" rel="noopener">${w.t}</a>`));
+  tdWf.appendChild(el('div','wf-cats',w.cats));
+  tr.appendChild(tdWf);
+
+  tr.appendChild(el('td','c-desc',`<div class="desc">${w.d}</div>`));
+
+  const tdStage=el('td','c-stage');
+  const stbox=el('div','stages');
+  w.stages.forEach((s,i)=>{
+    const sp=el('span','stage'+(i===0?' primary':''));
+    sp.style.background=STAGES[s].bg; sp.style.color=STAGES[s].dot;
+    sp.innerHTML=`<span class="dot" style="background:${STAGES[s].dot}"></span><span class="lbl" style="color:var(--ink)">${s}</span>`;
+    stbox.appendChild(sp);
+  });
+  tdStage.appendChild(stbox);
+  tr.appendChild(tdStage);
+
+  const tdTools=el('td','c-tools');
+  const tb=el('div','tools');
+  w.tools.forEach(t=>tb.appendChild(el('span','tool',t)));
+  tdTools.appendChild(tb);
+  tr.appendChild(tdTools);
+
+  const tdSteps=el('td','c-steps');
+  const ol=el('ol','steps');
+  w.steps.forEach(s=>{
+    const dash=s.indexOf(' — ');
+    if(dash>-1){ol.appendChild(el('li',null,`<b>${s.slice(0,dash)}</b>${s.slice(dash)}`));}
+    else{ol.appendChild(el('li',null,s));}
+  });
+  tdSteps.appendChild(ol);
+  tr.appendChild(tdSteps);
+
+  tbody.appendChild(tr);
+});
+
+// build filter chips
+const legend=document.getElementById('legend');
+const counts={}; DATA.forEach(w=>w.stages.forEach(s=>counts[s]=(counts[s]||0)+1));
+ORDER.forEach(s=>{
+  if(!counts[s])return;
+  const b=el('button','chip'); b.dataset.stage=s; b.setAttribute('aria-pressed','true');
+  b.innerHTML=`<span class="dot" style="background:${STAGES[s].dot}"></span>${s} <span style="opacity:.6">${counts[s]}</span>`;
+  legend.appendChild(b);
+});
+
+let active=new Set(); // empty = show all
+function apply(){
+  let shown=0;
+  document.querySelectorAll('#tbody tr').forEach(tr=>{
+    const st=tr.dataset.stages.split('|');
+    const vis = active.size===0 || st.some(s=>active.has(s));
+    tr.classList.toggle('hidden',!vis);
+    if(vis)shown++;
+  });
+  document.getElementById('count').textContent=shown;
+  document.querySelectorAll('.chip').forEach(c=>{
+    const s=c.dataset.stage;
+    if(s==='ALL'){c.setAttribute('aria-pressed', active.size===0);}
+    else{c.setAttribute('aria-pressed', active.size===0 || active.has(s));}
+  });
+}
+legend.addEventListener('click',e=>{
+  const c=e.target.closest('.chip'); if(!c)return;
+  const s=c.dataset.stage;
+  if(s==='ALL'){active.clear();}
+  else{ if(active.has(s))active.delete(s); else active.add(s); }
+  apply();
+});
+apply();
+</script>
+
+</body>
+</html>
