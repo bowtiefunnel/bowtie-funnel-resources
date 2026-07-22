@@ -22,13 +22,23 @@
   body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
   .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-  .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
-  .sn-brand{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;margin-right:auto;white-space:nowrap;}
-  .sn-brand .slash{color:var(--accent);}
-  .sn-tab{font-family:var(--sans);font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
+  .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;position:relative;}
+  .sn-brand{display:flex;align-items:center;text-decoration:none;}
+  .sn-labs{font-family:'Roboto',system-ui,sans-serif;font-weight:700;font-size:15px;color:#6B29F7;text-decoration:none;letter-spacing:-.01em;margin-left:2px;}
+  .sn-brand img{height:30px;width:auto;}
+  .sn-brand .sn-logo-dark{display:none;}
+  @media(prefers-color-scheme:dark){.sn-brand .sn-logo-light{display:none;}.sn-brand .sn-logo-dark{display:block;}}
+  :root[data-theme="light"] .sn-brand .sn-logo-light{display:block;} :root[data-theme="light"] .sn-brand .sn-logo-dark{display:none;}
+  :root[data-theme="dark"] .sn-brand .sn-logo-light{display:none;} :root[data-theme="dark"] .sn-brand .sn-logo-dark{display:block;}
+  .sn-cta{background:#6B29F7;color:#fff;font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:700;text-decoration:none;padding:7px 16px;border-radius:6px;white-space:nowrap;transition:background .2s;}
+  .sn-cta:hover{background:#5a20e0;}
+  .sn-tab{font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:500;color:var(--ink);opacity:.6;text-decoration:none;padding:6px 12px;border-radius:6px;transition:opacity .12s,background .12s;}
   .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
-  .sn-tab.active{opacity:1;color:var(--accent);font-weight:600;}
-  @media(max-width:520px){.sn-brand{font-size:12px;}.sn-tab{padding:6px 7px;font-size:12.5px;}}
+  .sn-tab.active{opacity:1;color:#6B29F7;font-weight:700;}
+  @media(max-width:520px){.sn-brand img{height:26px;}.sn-tab{padding:6px 7px;font-size:12.5px;}.sn-cta{padding:6px 10px;font-size:12px;}}
+  .sn-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .sn-burger{display:none;background:none;border:none;cursor:pointer;font-size:22px;line-height:1;color:var(--ink);padding:4px 8px;margin-left:auto;}
+  @media(max-width:640px){.sn-burger{display:block;}.sn-right{position:absolute;top:100%;right:0;left:0;flex-direction:column;align-items:stretch;gap:4px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 10px 24px rgba(0,0,0,.10);padding:10px;display:none;margin-left:0;}.sn-right.sn-open{display:flex;}.sn-right .sn-tab,.sn-right .sn-labs{padding:11px 12px;font-size:15px;}.sn-right .sn-cta{text-align:center;padding:11px;}}
 
   .wrap { max-width: 940px; margin: 0 auto; padding: clamp(28px, 6vw, 64px) clamp(20px, 5vw, 40px) 80px; }
   .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
@@ -91,13 +101,23 @@
   footer a { color: var(--accent); text-decoration: none; }
   a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <nav class="sitenav"><div class="sn-inner">
-  <a class="sn-brand" href="/"><span class="slash">/</span>Bowtie&nbsp;Funnel&nbsp;Resources</a>
-  <a class="sn-tab active" href="/">Skills</a>
-  <a class="sn-tab" href="/tools/">Tools</a>
+  <a class="sn-brand" href="https://bowtiefunnel.com/" aria-label="Bowtie Funnel">
+    <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
+    <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
+  </a>
+  <div class="sn-right">
+    <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
+    <a class="sn-tab active" href="/">Skills</a>
+    <a class="sn-tab" href="/tools/">Tools</a>
+    <a class="sn-tab" href="/agent-skills/">Agent Skills</a>
+    <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
+  </div>
+  <button class="sn-burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
 </div></nav>
 
 <div class="wrap">
@@ -187,5 +207,6 @@ cp -r skills/agent-anatomy ~/.claude/skills/</pre>
     <span><a href="https://github.com/bowtiefunnel/bowtie-funnel-resources">github.com/bowtiefunnel</a></span>
   </footer>
 </div>
+<script>(function(){var b=document.querySelector('.sn-burger'),r=document.querySelector('.sn-right');if(!b||!r)return;function set(o){r.classList.toggle('sn-open',o);b.setAttribute('aria-expanded',o);b.innerHTML=o?'\u2715':'\u2630';}b.addEventListener('click',function(){set(!r.classList.contains('sn-open'));});r.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){set(false);});});})();</script>
 </body>
 </html>
