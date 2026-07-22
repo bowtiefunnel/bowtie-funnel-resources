@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🔀 llm-switchboard</h1>
+  <h1>llm-switchboard</h1>
   <p><strong>Local LLM prompt router — free-ish for workflow, frontier for thinking.</strong></p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
@@ -15,7 +15,7 @@
 
 ---
 
-## 🌟 Why
+## Why
 
 Using a frontier model for every request wastes time and money. Traditional routers
 burn *another* LLM call to classify the prompt. This one scores prompts locally across
@@ -36,7 +36,7 @@ prompt ──▶ [ switchboard ]  local, <1ms, no network
 
 ---
 
-## 📦 Install
+## Install
 
 No npm, no build. Copy the one file into your project:
 
@@ -48,7 +48,7 @@ Runs in browser and Node (ESM, zero dependencies).
 
 ---
 
-## 🚦 Tiers → models
+## Tiers → models
 
 Every prompt lands in one of four tiers. Each tier is an **ordered list of options**,
 mirroring the BTF RevOps/Marketing agent pages' "model options (recommended in bold)":
@@ -56,10 +56,10 @@ mirroring the BTF RevOps/Marketing agent pages' "model options (recommended in b
 
 | Tier | Page section (split) | Bold pick | Free option |
 | :--- | :--- | :--- | :--- |
-| 🟢 **SIMPLE** | pipeline (0-100-0) | `google/gemini-2.5-flash-lite` | `google/gemma-4-31b-it:free` |
-| 🟡 **MEDIUM** | guarded judgment (~5-90-5) | `google/gemini-2.5-flash` | `openai/gpt-oss-20b:free` |
-| 🔴 **COMPLEX** | drafting / analysis (~5-45-50) | `anthropic/claude-sonnet-5` | `nvidia/nemotron-3-ultra-550b-a55b:free` |
-| 🧠 **REASONING** | neurosymbolic (10-80-10) | `anthropic/claude-sonnet-5` | `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` |
+| **SIMPLE** | pipeline (0-100-0) | `google/gemini-2.5-flash-lite` | `google/gemma-4-31b-it:free` |
+| **MEDIUM** | guarded judgment (~5-90-5) | `google/gemini-2.5-flash` | `openai/gpt-oss-20b:free` |
+| **COMPLEX** | drafting / analysis (~5-45-50) | `anthropic/claude-sonnet-5` | `nvidia/nemotron-3-ultra-550b-a55b:free` |
+| **REASONING** | neurosymbolic (10-80-10) | `anthropic/claude-sonnet-5` | `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` |
 
 Full option lists also carry the pages' other picks — GPT-5 / GPT-5 mini / GPT-5 nano,
 Gemini 3 Pro, Claude Haiku 4.5, Opus 4.8 — plus **Kimi K3** in the agentic and reasoning
@@ -68,12 +68,12 @@ OpenRouter, so it never appears in the `free` slot). The **agentic** table (auto
 on multi-step tool prompts, or forced) leads with proven callers — *"tool-loop
 reliability → Claude Sonnet 5,"* per the pages.
 
-> ⚠️ Free models rotate on OpenRouter (slugs appear and vanish) and carry shared daily
+> Free models rotate on OpenRouter (slugs appear and vanish) and carry shared daily
 > rate limits. Verified live at time of writing — re-check before relying on any `:free` slug.
 
 ---
 
-## 📖 Usage
+## Usage
 
 ```js
 import { route } from "./btf-switchboard.js";
@@ -114,7 +114,7 @@ Use `classify(prompt)` if you only want the tier.
 
 ---
 
-## 📊 How it works
+## How it works
 
 Scores each prompt across weighted dimensions — reasoning markers, code, technical /
 business-analysis vocab, creative cues, simple-question cues, agentic signatures,
@@ -122,7 +122,7 @@ imperative verbs, output-format demands — then maps the weighted score onto ti
 boundaries with a sigmoid confidence. Below the confidence threshold a prompt is
 **ambiguous** and falls to a safe default tier (MEDIUM).
 
-> ⚠️ This is a **heuristic port tuned for GTM/agent prompts** — the boundaries and
+> This is a **heuristic port tuned for GTM/agent prompts** — the boundaries and
 > keyword lists are ours, not a byte-exact clone of any npm package. Retune
 > `DIM`, `BOUND`, and `DEFAULT_TABLES` for your own prompt mix.
 
@@ -134,6 +134,6 @@ pure, local decision.
 
 ---
 
-## 📄 License
+## License
 
 MIT © Bowtie Funnel
