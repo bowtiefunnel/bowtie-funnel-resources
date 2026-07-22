@@ -1,6 +1,6 @@
 ---
 name: pick-gtm-stack
-description: Use when choosing which GTM tools to use for a task, play, or client engagement — "what tools should I use for X", "build a stack for this play", "which tool does Y", or when designing an outbound, inbound, nurture, or retention motion and the tool choices aren't settled. Recommends from the mapped Bowtie Funnel 76-tool stack instead of guessing from training data.
+description: Use when choosing which GTM tools to use for a task, play, or client engagement — "what tools should I use for X", "build a stack for this play", "which tool does Y", or when designing an outbound, inbound, nurture, or retention motion and the tool choices aren't settled. Recommends from the mapped Bowtie Funnel tool stack instead of guessing from training data.
 ---
 
 # Pick GTM Stack

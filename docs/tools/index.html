@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GTM Tool Stack — 76 tools mapped · Bowtie Funnel</title>
-<meta name="description" content="Every tool named across 48 GTM workflows — what each one is, what it does, and its go-to-market impact. Filter by category.">
+<title>GTM Tool Stack — 87 tools mapped · Bowtie Funnel</title>
+<meta name="description" content="87 GTM tools mapped — every tool named across 48 GTM workflows plus Bowtie Funnel's own agent-infrastructure stack. What each one is, what it does, its GTM impact, and its customer-lifecycle stage.">
 <style>
   :root {
     --bg:#f4f5f7; --surface:#ffffff; --surface-2:#fafbfc;
@@ -136,17 +136,17 @@
 <div class="wrap">
   <header>
     <div class="eyebrow">GTM tool stack</div>
-    <h1>76 GTM tools, mapped by what they do</h1>
-    <p class="lede">Every tool in the Bowtie Funnel GTM stack — sorted into the job it does in a go-to-market motion. For each: what it is, what it does, its GTM impact, and where it sits in the customer lifecycle — awareness, education, selection, mutual commit, onboarding, retention, expansion. Click a category to filter. The <b>× N</b> under each tool is how many of our 48 mapped workflows use it.</p>
+    <h1>87 GTM tools, mapped by what they do</h1>
+    <p class="lede">Every tool in the Bowtie Funnel GTM stack — sorted into the job it does in a go-to-market motion. For each: what it is, what it does, its GTM impact, and where it sits in the customer lifecycle — awareness, education, selection, mutual commit, onboarding, retention, expansion. Click a category to filter. The <b>× N</b> under each tool is how many of our 48 mapped workflows use it; <b>Agent Infrastructure</b> is our own code-first execution layer (the Headless GTM OS), so it carries a core-stack badge instead of a count.</p>
   </header>
 
   <div class="legend" id="legend">
     <div class="note">Filter by category:</div>
-    <button class="chip all" data-cat="ALL" aria-pressed="true">All 76</button>
+    <button class="chip all" data-cat="ALL" aria-pressed="true">All 87</button>
   </div>
 
   <div class="meta">
-    <span>Showing <b id="count">76</b> of 76</span>
+    <span>Showing <b id="count">…</b> of <span id="total">…</span></span>
     <span>Derived from workflows.io teardown · usage counts from the 48 mapped workflows</span>
   </div>
 
@@ -207,7 +207,8 @@ const CATS = {
   "AI & LLM":            "#8256c4",
   "Content & Design":    "#c74b6b",
   "Meetings & Calling":  "#0f9a86",
-  "RevOps & Analytics":  "#6b7688"
+  "RevOps & Analytics":  "#6b7688",
+  "Agent Infrastructure":"#5a6acf"
 };
 
 // bowtie lifecycle stages, in funnel order, with chip colors
@@ -218,10 +219,12 @@ const STAGES={
 
 // single source of truth: tools.json — the same file AI agents fetch
 const DATA=(await fetch('tools.json').then(r=>r.json())).tools
-  .map(t=>({n:t.name,c:t.category,x:t.workflows_used,d:t.description,w:t.what_it_does,g:t.gtm_impact,l:t.lifecycle||[]}));
+  .map(t=>({n:t.name,c:t.category,x:t.workflows_used,cs:!!t.core_stack,d:t.description,w:t.what_it_does,g:t.gtm_impact,l:t.lifecycle||[]}));
 
 const ORDER = Object.keys(CATS);
 DATA.sort((a,b)=> b.x-a.x || a.n.localeCompare(b.n));
+document.querySelector('.chip.all').textContent=`All ${DATA.length}`;
+document.getElementById('total').textContent=DATA.length;
 
 const tbody=document.getElementById('tbody');
 function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
@@ -235,7 +238,7 @@ DATA.forEach(t=>{
   const cat=el('span','cat'); cat.style.background=color+"1f"; cat.style.color=color;
   cat.innerHTML=`<span class="dot" style="background:${color}"></span>${t.c}`;
   tdTool.appendChild(cat);
-  tdTool.appendChild(el('span','uses',`in ${t.x} of 48 workflows`));
+  tdTool.appendChild(el('span','uses',t.cs?'BTF core stack · Headless GTM OS':`in ${t.x} of 48 workflows`));
   tr.appendChild(tdTool);
 
   const chips = t.l.length===Object.keys(STAGES).length

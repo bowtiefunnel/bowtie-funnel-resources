@@ -1,9 +1,9 @@
 {
  "title": "Bowtie Funnel GTM tool stack",
- "description": "Every tool named across 48 mapped GTM workflows — what each is, what it does, and its go-to-market impact. Categories reflect each tool's primary job; descriptions are Bowtie Funnel's interpretation, not vendor copy. Each tool is tagged with the customer-lifecycle stages it serves: awareness, education, selection, mutual commit, onboarding, retention, expansion.",
+ "description": "Every tool named across 48 mapped GTM workflows — what each is, what it does, and its go-to-market impact. Categories reflect each tool's primary job; descriptions are Bowtie Funnel's interpretation, not vendor copy. The Agent Infrastructure category is Bowtie Funnel's own code-first execution layer (the Headless GTM OS) rather than teardown-derived; those entries carry core_stack: true and no workflow usage count. Each tool is tagged with the customer-lifecycle stages it serves: awareness, education, selection, mutual commit, onboarding, retention, expansion.",
  "source": "https://labs.bowtiefunnel.com/tools/",
  "workflows_mapped": 48,
- "tool_count": 76,
+ "tool_count": 87,
  "tools": [
   {
    "name": "Clay",
@@ -941,6 +941,204 @@
    "gtm_impact": "Unlocks hard-to-scrape data sources.",
    "lifecycle": [
     "Awareness"
+   ]
+  },
+  {
+   "name": "Trigger.dev",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Open-source background-jobs platform for TypeScript — durable task execution with retries, queues, checkpoints, and per-PR preview branches.",
+   "what_it_does": "Runs the long-running GTM agent tasks (enrichment, scoring, outreach orchestration) with no HTTP timeouts, in isolated sandbox/staging/prod environments.",
+   "gtm_impact": "The execution engine of the Headless GTM OS — durable, observable, code-first automation.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "OpenRouter",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Unified API over hundreds of LLMs from every major provider — one key, per-model pricing, automatic failover.",
+   "what_it_does": "Serves model inference for agent tasks — cheap models for routine steps, frontier models for reasoning.",
+   "gtm_impact": "Right-sized model cost per task and no provider lock-in.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "Supabase",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Open-source Postgres platform — database, storage, vector search, and connection pooling, with per-PR preview databases.",
+   "what_it_does": "Stores pipeline state, chat-thread context, and reports; Postgres advisory locks prevent task race conditions.",
+   "gtm_impact": "The durable memory of the GTM OS — state, storage, and locks in one Postgres.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "GitHub",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "The default code-hosting platform — version control, pull requests, code review, and CI via GitHub Actions.",
+   "what_it_does": "Hosts the GTM OS codebase; every prompt or schema change ships through a reviewed PR with automated CI gates.",
+   "gtm_impact": "Version-controlled GTM logic — every change reviewed, diffable, and revertible.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "Infisical",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Open-source secret-management platform with per-environment workspaces and machine identities.",
+   "what_it_does": "Injects tier-specific API keys (OpenRouter, Supabase, Slack…) across local CLIs, GitHub Actions, and Trigger.dev environments.",
+   "gtm_impact": "One source of truth for secrets — no keys in code, isolated per client and environment.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "Svix",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Managed webhook gateway with HMAC signature verification, retry queues, and spike absorption.",
+   "what_it_does": "Sits between inbound triggers (Stripe, HubSpot, Slack, forms) and Trigger.dev — verifies signatures, buffers spikes, and ACKs Slack inside its 3-second timeout.",
+   "gtm_impact": "Zero dropped or spoofed webhooks; traffic spikes never crash the pipeline.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "DeepEval",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Open-source LLM evaluation framework (Apache 2.0) that runs assertion tests against prompts and outputs in CI.",
+   "what_it_does": "Gates every PR in GitHub Actions — blocks hallucination, regression, and broken prompt formatting before merge.",
+   "gtm_impact": "Prompt quality enforced like code quality — regressions die at the PR, not in production.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "Langfuse",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Open-source LLM observability platform — tracing, token-cost accounting, prompt versioning, and eval scores.",
+   "what_it_does": "Logs every LLM call's cost, latency, prompt version, and trace across dev, staging, and prod projects.",
+   "gtm_impact": "Full visibility into what AI spends and does — per environment, per client.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "Vercel AI Gateway",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "Vercel's LLM gateway — one API over many model providers with routing, fallback, and budget caps.",
+   "what_it_does": "Routes LLM calls with automatic provider fallback and spend limits ahead of OpenRouter/Anthropic.",
+   "gtm_impact": "No single-provider outage or runaway spend takes the pipeline down.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "Zod / Drizzle",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "TypeScript runtime schema validation (Zod) and type-safe SQL ORM (Drizzle) — strict data contracts at the code level.",
+   "what_it_does": "Validates every LLM output and webhook payload against strict schemas before anything touches the database.",
+   "gtm_impact": "Malformed AI output gets rejected and retried instead of corrupting pipeline data.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
+   ]
+  },
+  {
+   "name": "CloakPipe",
+   "category": "Agent Infrastructure",
+   "workflows_used": 0,
+   "core_stack": true,
+   "description": "PII and secret redaction proxy that scrubs prompts before they reach external LLM endpoints.",
+   "what_it_does": "Redacts personal, HIPAA, and confidential client data from prompts ahead of any LLM call.",
+   "gtm_impact": "Privacy compliance by architecture — client data never leaks into third-party models.",
+   "lifecycle": [
+    "Awareness",
+    "Education",
+    "Selection",
+    "Mutual commit",
+    "Onboarding",
+    "Retention",
+    "Expansion"
    ]
   }
  ],
