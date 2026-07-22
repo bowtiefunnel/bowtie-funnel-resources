@@ -92,7 +92,6 @@
   </a>
   <div class="sn-right">
     <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
-    <a class="sn-tab active" href="/">Skills</a>
     <a class="sn-tab" href="/tools/">Tools</a>
     <a class="sn-tab" href="/agent-skills/">Agent Skills</a>
     <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
@@ -103,11 +102,11 @@
 <div class="wrap">
   <p class="eyebrow">Open-source · MIT</p>
   <h1>Field-tested resources for<br><span class="slash">/</span>building AI agents</h1>
-  <p class="lede">Skills, tools, and a mapped GTM stack for building AI agents — pulled straight from how the <strong>Bowtie Funnel</strong> agency builds and runs its own. Copy anything that's useful.</p>
+  <p class="lede">Skills, runtime tools, and GTM agent capabilities for building AI agents — pulled straight from how the <strong>Bowtie Funnel</strong> agency builds and runs its own. Three sections, all MIT-licensed. Browse below and copy anything useful.</p>
 
-  <section aria-label="Skills">
-    <h2>Skill directory</h2>
-    <p class="sec-note">Drop-in skills for AI coding agents. Each has its own page with install + usage.</p>
+  <section id="skills" aria-label="Skills">
+    <h2>① Skill directory</h2>
+    <p class="sec-note">Drop-in skills for AI coding agents — planning gates and scaffolding you install once and call by name. Each has its own page with install + usage.</p>
     <div class="skill-grid">
 
       <a class="skill-card" href="/skills/agent-anatomy/">
@@ -141,9 +140,9 @@
     </div>
   </section>
 
-  <section aria-label="Tools">
-    <h2>Tool directory</h2>
-    <p class="sec-note">Reusable runtime code we ship in the open — copy the file, import it.</p>
+  <section id="tools" aria-label="Tools">
+    <h2>② Tools</h2>
+    <p class="sec-note">Reusable runtime code we ship in the open, plus the full GTM stack mapped for tool selection — copy the file, or browse what we run.</p>
     <div class="skill-grid">
 
       <a class="skill-card" href="https://github.com/bowtiefunnel/bowtie-funnel-resources/tree/main/tools/llm-switchboard">
@@ -154,14 +153,21 @@
       </a>
 
     </div>
-  </section>
-
-  <section aria-label="More">
-    <h2>Also on this site</h2>
-    <div class="more-grid">
+    <div class="more-grid" style="margin-top:18px;">
       <a class="more-card" href="/tools/">
         <p class="mc-title"><span class="n">87</span> GTM tools, mapped</p>
-        <p class="mc-desc">Every tool in the Bowtie Funnel GTM stack — what it is, what it does, and its GTM impact. Filter by category.</p>
+        <p class="mc-desc">Every tool in the Bowtie Funnel GTM stack — what it is, what it does, and its GTM impact. Filter by category. Feeds the <span style="font-family:var(--mono)">/pick-gtm-stack</span> and <span style="font-family:var(--mono)">/pick-agent-stack</span> skills above.</p>
+      </a>
+    </div>
+  </section>
+
+  <section id="agent-skills" aria-label="Agent skills">
+    <h2>③ Agent skills</h2>
+    <p class="sec-note">The GTM capabilities our agents actually run — each mapped to where it does its job across the customer lifecycle, from awareness through retention and expansion.</p>
+    <div class="more-grid">
+      <a class="more-card" href="/agent-skills/">
+        <p class="mc-title"><span class="n">13</span> GTM agent skills, mapped to the bowtie</p>
+        <p class="mc-desc">Repurposed from the Growth (Verbiflow) MCP and rebranded for Bowtie Funnel — prospecting, enrichment, scoring, multichannel send, and more. Filter by lifecycle stage; each has its own page.</p>
       </a>
     </div>
   </section>
