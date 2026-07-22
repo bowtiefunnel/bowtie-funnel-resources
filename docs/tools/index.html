@@ -46,8 +46,13 @@
   .chip.all { background:var(--ink); color:var(--surface); }
   .chip.all[aria-pressed="false"] { opacity:.4; }
 
-  .meta { display:flex; gap:18px; align-items:baseline; margin:14px 2px 18px; font-size:13px; color:var(--ink-faint); }
+  .meta { display:flex; flex-wrap:wrap; gap:12px 18px; align-items:center; margin:14px 2px 18px; font-size:13px; color:var(--ink-faint); }
   .meta b { color:var(--ink); font-variant-numeric:tabular-nums; }
+  .dl { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;
+    padding:6px 12px; border-radius:8px; border:1px solid var(--line-strong); cursor:pointer;
+    color:var(--ink); background:var(--surface); transition:background .12s; }
+  .dl:hover { background:var(--surface-2); }
+  .dl-group { display:flex; gap:8px; margin-left:auto; }
 
   .tablecard { background:var(--surface); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
   .scroll { overflow-x:auto; }
@@ -77,6 +82,33 @@
   footer { margin-top:26px; font-size:12px; color:var(--ink-faint); max-width:80ch; }
   .hidden { display:none; }
   @media (max-width:760px){ .wrap{ padding:24px 12px 60px; } }
+
+  /* Bowtie Funnel's own tools */
+  .own { margin-top:44px; }
+  .own-h { font-size:clamp(20px,3vw,28px); margin:6px 0 8px; letter-spacing:-.02em; }
+  .toolcard { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:22px 24px; margin-top:16px; }
+  .tc-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .tc-name { font-size:18px; margin:0; letter-spacing:-.01em; }
+  .tc-tag { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; color:var(--ink-faint);
+    border:1px solid var(--line-strong); border-radius:999px; padding:3px 10px; }
+  .tc-desc { font-size:14px; color:var(--ink-soft); max-width:78ch; margin:12px 0 14px; }
+  .tc-desc a, .lede a { color:var(--accent-ink); }
+  .tc-flow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12px; color:var(--ink-soft); background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:10px 14px; }
+  .tc-flow .arw { color:var(--accent); font-weight:700; }
+  .tc-flow .sb { color:var(--ink); font-weight:600; }
+  .tc-tiers { border-collapse:collapse; width:100%; min-width:520px; margin:16px 0 6px; }
+  .tc-tiers th { text-align:left; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint);
+    font-weight:700; padding:8px 12px; border-bottom:1px solid var(--line-strong); }
+  .tc-tiers td { padding:9px 12px; border-bottom:1px solid var(--line); font-size:12.5px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--ink-soft); }
+  .tc-tiers tr:last-child td { border-bottom:none; }
+  .tc-tiers .t-s{color:#1f9d6b} .tc-tiers .t-m{color:#c99a1e} .tc-tiers .t-c{color:#c74b6b} .tc-tiers .t-r{color:#8256c4}
+  .tc-note { font-size:12.5px; color:var(--ink-faint); margin:8px 0 16px; }
+  .tc-note code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--ink); }
+  .tc-links { display:flex; gap:10px; flex-wrap:wrap; }
+  .tc-links .dl { text-decoration:none; }
 </style>
 
 <style id="sitenav-css">
@@ -112,6 +144,10 @@
   <div class="meta">
     <span>Showing <b id="count">76</b> of 76</span>
     <span>Derived from workflows.io teardown · usage counts from the 48 mapped workflows</span>
+    <div class="dl-group">
+      <button class="dl" id="dl-csv" title="Download the full table as a CSV spreadsheet">⬇ Download CSV</button>
+      <button class="dl" id="dl-md" title="Copy the full table as markdown — paste into ChatGPT or Claude and ask questions about the stack">⧉ Copy for AI</button>
+    </div>
   </div>
 
   <div class="tablecard"><div class="scroll">
@@ -125,6 +161,36 @@
       <tbody id="tbody"></tbody>
     </table>
   </div></div>
+
+  <!-- Bowtie Funnel's own tools -->
+  <section class="own">
+    <div class="eyebrow" style="margin-top:0">Built by Bowtie Funnel</div>
+    <h2 class="own-h">Our own tools</h2>
+    <p class="lede">Reusable code we ship in the open — drop-in building blocks for GTM agents, separate from the vendor stack above.</p>
+
+    <article class="toolcard">
+      <div class="tc-top">
+        <h3 class="tc-name">🔀 llm-switchboard</h3>
+        <span class="tc-tag">local · zero-dep · MIT</span>
+      </div>
+      <p class="tc-desc">A ~130-line prompt router that sits <b>before OpenRouter</b>. It classifies a prompt in &lt;1ms, picks the model, and hands the ID to your OpenRouter call — cheap/free models for the workflow miles, frontier for thinking. The tier picks mirror our <a href="https://labs.bowtiefunnel.com/">RevOps &amp; Marketing agent maps</a>.</p>
+      <div class="tc-flow"><span>prompt</span><span class="arw">→</span><span class="sb">switchboard · SIMPLE · MEDIUM · COMPLEX · REASONING</span><span class="arw">→</span><span>OpenRouter</span><span class="arw">→</span><span>model</span></div>
+      <div class="scroll"><table class="tc-tiers">
+        <thead><tr><th>Tier</th><th>Bold pick</th><th>Free option</th></tr></thead>
+        <tbody>
+          <tr><td><b class="t-s">SIMPLE</b></td><td>google/gemini-2.5-flash-lite</td><td>google/gemma-4-31b-it:free</td></tr>
+          <tr><td><b class="t-m">MEDIUM</b></td><td>google/gemini-2.5-flash</td><td>openai/gpt-oss-20b:free</td></tr>
+          <tr><td><b class="t-c">COMPLEX</b></td><td>anthropic/claude-sonnet-5</td><td>nvidia/nemotron-3-ultra-550b:free</td></tr>
+          <tr><td><b class="t-r">REASONING</b></td><td>anthropic/claude-sonnet-5</td><td>nvidia/nemotron-3-…-reasoning:free</td></tr>
+        </tbody>
+      </table></div>
+      <p class="tc-note">Option lists also carry GPT-5 / Gemini 3 Pro / Opus 4.8, plus Kimi K3 in the agentic tiers. <code>route(prompt, {preferFree:true})</code> swaps to the free model.</p>
+      <div class="tc-links">
+        <a class="dl" href="https://github.com/bowtiefunnel/bowtie-funnel-resources/tree/main/tools/llm-switchboard">View on GitHub →</a>
+        <a class="dl" href="https://github.com/bowtiefunnel/bowtie-funnel-resources/blob/main/tools/llm-switchboard/btf-switchboard.js">btf-switchboard.js</a>
+      </div>
+    </article>
+  </section>
 
   <footer id="foot"></footer>
 </div>
@@ -145,82 +211,82 @@ const CATS = {
 
 // n=name, c=category, x=usage count, d=description, w=what it does, g=GTM impact
 const DATA = [
- {n:"Clay",c:"Data & Enrichment",x:32,d:"GTM data-orchestration & enrichment platform.",w:"Aggregates, enriches, AI-qualifies and routes account/contact data from 100+ sources in one spreadsheet-like workbook.",g:"The central engine nearly every play runs through — where raw lists become CRM-ready pipeline."},
- {n:"HubSpot",c:"CRM",x:25,d:"All-in-one CRM & marketing platform.",w:"Stores accounts, contacts and deals and automates lead routing, scoring, and lifecycle workflows.",g:"System of record for the entire revenue motion; where scores and stages live."},
- {n:"Instantly",c:"Email Outreach",x:24,d:"Cold-email sending platform.",w:"Runs multi-inbox cold-email sequences with warmup and deliverability tooling.",g:"Scales cold email volume without burning sender domains."},
- {n:"HeyReach",c:"LinkedIn & Social",x:20,d:"LinkedIn outreach automation.",w:"Runs connection + message sequences across multiple LinkedIn accounts within safe limits.",g:"Scales LinkedIn outbound without triggering bans."},
- {n:"ChatGPT",c:"AI & LLM",x:18,d:"OpenAI's AI assistant.",w:"Powers AI qualification, classification and copywriting inside Clay and workflow steps.",g:"Scales human-judgment tasks (qualify, score, personalize) across the pipeline."},
- {n:"LinkedIn",c:"LinkedIn & Social",x:17,d:"The B2B professional network.",w:"Primary surface for social selling, content distribution, and prospecting.",g:"The core B2B demand and relationship channel everything orbits."},
- {n:"Claude",c:"AI & LLM",x:16,d:"Anthropic's AI assistant.",w:"Handles research, account qualification, copywriting and summarization across workflows.",g:"The reasoning layer that turns messy data into decisions and copy."},
- {n:"Jungler.ai",c:"LinkedIn & Social",x:16,d:"LinkedIn signal-tracking tool.",w:"Monitors posts, engagement and profile activity to surface intent signals.",g:"Turns social activity into timed outbound triggers."},
- {n:"Slack",c:"RevOps & Analytics",x:14,d:"Team messaging platform.",w:"Delivers real-time lead alerts, approvals and routing hand-offs to reps.",g:"The human-in-the-loop layer — fast approvals and hot-lead alerts."},
- {n:"Apollo",c:"Sourcing & TAM",x:11,d:"B2B contact & company database.",w:"Sources and filters target accounts and contacts by firmographic/technographic criteria.",g:"Fills top-of-funnel with ICP-matched prospects fast."},
- {n:"Findymail",c:"Data & Enrichment",x:11,d:"Email-finding and verification tool.",w:"Finds and validates work emails to keep bounce rates low.",g:"Protects deliverability and sender reputation on every send."},
- {n:"Beehiiv",c:"Content & Design",x:8,d:"Newsletter publishing platform.",w:"Publishes and grows email newsletters with built-in monetization.",g:"Owns the nurture channel and a first-party audience."},
- {n:"BetterContact",c:"Data & Enrichment",x:8,d:"Waterfall email/phone enrichment aggregator.",w:"Chains 20+ data providers to maximize contact-data hit rate.",g:"Higher contact coverage means more reachable prospects per list."},
- {n:"AI Ark",c:"Data & Enrichment",x:8,d:"AI research-agent for enrichment.",w:"Runs AI research to enrich and qualify accounts at scale.",g:"Automates the manual account research reps used to do by hand."},
- {n:"RB2B",c:"Signals & De-anon",x:7,d:"Person-level website visitor de-anonymization.",w:"Identifies individual anonymous US site visitors and pushes them to Slack/CRM.",g:"Turns silent website traffic into named, actionable leads."},
- {n:"Warmly",c:"Signals & De-anon",x:7,d:"Signal-based de-anon + orchestration.",w:"Reveals visiting accounts/people and triggers real-time engagement plays.",g:"Lets you act on warm intent while the visitor is still hot."},
- {n:"Notion",c:"Content & Design",x:6,d:"Docs & database workspace.",w:"Acts as the content system-of-record and approval hub before publishing.",g:"Keeps content ops organized and reviewable."},
- {n:"Ocean.io",c:"Sourcing & TAM",x:6,d:"Lookalike-account & TAM-mapping database.",w:"Finds companies similar to your best customers to expand the TAM.",g:"Widens pipeline with high-fit lookalike accounts."},
- {n:"Sybill",c:"Meetings & Calling",x:6,d:"AI sales-call assistant.",w:"Records, summarizes and extracts insights and action items from sales calls.",g:"Better call intel and tighter follow-through after meetings."},
- {n:"Amplitude",c:"RevOps & Analytics",x:5,d:"Product analytics platform.",w:"Tracks product usage to score PLG accounts and awareness stages.",g:"Turns product usage into buying signals for scoring."},
- {n:"Apify",c:"Data & Enrichment",x:5,d:"Web-scraping and automation platform.",w:"Runs actors to scrape LinkedIn, sites and social engagement at scale.",g:"Feeds engagement and signal data into the enrichment pipeline."},
- {n:"Customer.io",c:"RevOps & Analytics",x:5,d:"Lifecycle messaging platform.",w:"Automates behavior-triggered email and lifecycle nurture.",g:"Drives activation, nurture and retention on autopilot."},
- {n:"Fibbler",c:"Signals & De-anon",x:5,d:"LinkedIn-ads attribution/matching.",w:"Matches ad audiences and attributes LinkedIn-ad influence on pipeline.",g:"Proves ad contribution so spend can be optimized."},
- {n:"Teamfluence",c:"LinkedIn & Social",x:5,d:"LinkedIn engagement analytics.",w:"Tracks team engagement, connections and profile visitors on LinkedIn.",g:"Mines employee networks for warm, in-market leads."},
- {n:"Webflow",c:"Content & Design",x:5,d:"Visual website & CMS builder.",w:"Hosts and auto-publishes site + blog content via CMS and API.",g:"The publishing endpoint that turns drafts into live pages."},
- {n:"Claude Code",c:"AI & LLM",x:4,d:"Anthropic's agentic coding tool.",w:"Runs multi-step GTM automations and data work through agentic skills.",g:"Automates end-to-end GTM ops that used to need an engineer."},
- {n:"Crossbeam",c:"Signals & De-anon",x:4,d:"Partner-ecosystem data-sharing platform.",w:"Maps account overlaps with partners to find warm intro paths.",g:"Unlocks partner-sourced pipeline and warmer entries."},
- {n:"Discolike",c:"Sourcing & TAM",x:4,d:"AI lookalike-company finder.",w:"Generates broad lookalike company lists from seed accounts.",g:"Rapid TAM expansion built off proven winners."},
- {n:"Ergo",c:"Content & Design",x:4,d:"Content-intelligence & ideation tool.",w:"Mines high-performing content and surfaces ideas for drafting.",g:"Feeds data-backed content ideas instead of guesswork."},
- {n:"n8n",c:"RevOps & Analytics",x:4,d:"Workflow-automation platform.",w:"Wires tools together and runs custom automations and RAG agents.",g:"The glue that connects the stack without hard-coding."},
- {n:"Nooks",c:"Meetings & Calling",x:4,d:"AI parallel dialer.",w:"Runs parallel dials plus AI account-prep for calling sessions.",g:"Multiplies rep call throughput on warm lists."},
- {n:"Outreach",c:"Email Outreach",x:4,d:"Enterprise sales-engagement platform.",w:"Sequences email/call/task cadences for reps at scale.",g:"Structures and enforces consistent rep follow-up."},
- {n:"Tally",c:"Meetings & Calling",x:4,d:"Form builder.",w:"Captures inbound leads and demo requests via forms and webhooks.",g:"The inbound-capture entry point feeding the pipeline."},
- {n:"Chilipiper",c:"Meetings & Calling",x:4,d:"Lead routing & scheduling.",w:"Instantly qualifies, routes and books inbound leads to the right rep.",g:"Zero-leakage inbound hand-off at peak intent."},
- {n:"Cursor",c:"AI & LLM",x:3,d:"AI code editor.",w:"Writes and edits scraping/automation code with AI assistance.",g:"Builds custom GTM scripts faster."},
- {n:"Figma",c:"Content & Design",x:3,d:"Design tool.",w:"Designs content graphics, lead magnets and design systems.",g:"Produces on-brand creative for content and capture."},
- {n:"Freckle",c:"Signals & De-anon",x:3,d:"Website de-anonymization tool.",w:"Captures and identifies anonymous site visitors for follow-up.",g:"Expands the top-of-funnel capture net."},
- {n:"Salesforce",c:"CRM",x:3,d:"Enterprise CRM platform.",w:"Manages the full account/opportunity lifecycle for larger orgs.",g:"Enterprise-grade revenue system of record."},
- {n:"Adobe",c:"Content & Design",x:2,d:"Creative software suite.",w:"Produces graphics, video and high-end creative assets.",g:"Premium creative production for brand and content."},
- {n:"BuiltWith",c:"Sourcing & TAM",x:2,d:"Website technology profiler.",w:"Detects the tech a site runs to qualify technographic fit.",g:"Filters the TAM by tech-stack compatibility."},
- {n:"Cal.com",c:"Meetings & Calling",x:2,d:"Open-source scheduling tool.",w:"Books meetings and routes leads to the right rep.",g:"Removes friction between intent and a booked call."},
- {n:"Favikon",c:"LinkedIn & Social",x:2,d:"Creator & influence analytics.",w:"Scores and finds LinkedIn creators and influencers.",g:"Identifies whose audience is worth tapping."},
- {n:"G2",c:"Signals & De-anon",x:2,d:"B2B review & buyer-intent platform.",w:"Provides reviews and category-shopping intent signals.",g:"Surfaces in-market buyers actively comparing tools."},
- {n:"Kondo",c:"LinkedIn & Social",x:2,d:"LinkedIn inbox/CRM tool.",w:"Organizes and follows up on LinkedIn conversations like a CRM.",g:"Stops warm LinkedIn chats from leaking away."},
- {n:"Magicpost.in",c:"LinkedIn & Social",x:2,d:"LinkedIn content scheduling tool.",w:"Drafts, formats and schedules LinkedIn posts.",g:"Sustains a consistent content cadence."},
- {n:"OutboundSync",c:"Signals & De-anon",x:2,d:"Outbound-to-CRM attribution.",w:"Syncs Instantly/HeyReach activity into HubSpot and attributes it.",g:"Makes outbound's true revenue impact measurable."},
- {n:"Salesloft",c:"Email Outreach",x:2,d:"Sales-engagement platform.",w:"Manages multi-touch cadences and rep activity.",g:"Keeps outbound cadences consistent across the team."},
- {n:"Serper",c:"Data & Enrichment",x:2,d:"Google search API.",w:"Pulls live search results to enrich or verify company data.",g:"Cheap real-time web signal for enrichment steps."},
- {n:"TheirStack",c:"Sourcing & TAM",x:2,d:"Tech-stack & job-posting signal database.",w:"Finds companies by the tools they use or the roles they're hiring.",g:"Signal-based targeting on stack and hiring intent."},
- {n:"VS Code",c:"AI & LLM",x:2,d:"Code editor.",w:"Local environment for running scrapers and automation scripts.",g:"Home base for custom GTM tooling."},
- {n:"Ahrefs",c:"RevOps & Analytics",x:1,d:"SEO analytics toolset.",w:"Analyzes keywords, backlinks and organic search signals.",g:"Informs content and SEO targeting decisions."},
- {n:"Albacross",c:"Signals & De-anon",x:1,d:"Account-level visitor identification.",w:"Identifies the companies visiting your website.",g:"Reveals in-market accounts browsing anonymously."},
- {n:"Attio",c:"CRM",x:1,d:"Modern, flexible CRM.",w:"Builds custom data models and workflows on a real-time CRM.",g:"Startup-friendly, data-native system of record."},
- {n:"Browserbase",c:"Data & Enrichment",x:1,d:"Headless-browser infrastructure.",w:"Runs scalable browser automation for scraping and agents.",g:"Powers custom data collection at scale."},
- {n:"Buffer",c:"LinkedIn & Social",x:1,d:"Social scheduling tool.",w:"Schedules and distributes content across social channels.",g:"Keeps multi-channel distribution consistent."},
- {n:"Calendly",c:"Meetings & Calling",x:1,d:"Meeting scheduling tool.",w:"Automates meeting booking and routing.",g:"Captures meetings at the moment of peak intent."},
- {n:"Capterra",c:"Signals & De-anon",x:1,d:"Software review & intent site.",w:"Provides reviews and category-shopping intent data.",g:"Another source of in-market buyer signals."},
- {n:"Cargo",c:"Data & Enrichment",x:1,d:"Revenue-data orchestration platform.",w:"Centralizes, normalizes and routes GTM data between tools and CRM.",g:"Keeps the data layer clean and synced at scale."},
- {n:"Crunchbase",c:"Sourcing & TAM",x:1,d:"Company & funding database.",w:"Provides firmographics, funding and growth signals on accounts.",g:"Prioritizes accounts by funding and growth timing."},
- {n:"Default.com",c:"Meetings & Calling",x:1,d:"Inbound conversion platform.",w:"Qualifies, routes and books inbound demos in one flow.",g:"Converts inbound faster with less leakage."},
- {n:"Factors.ai",c:"Signals & De-anon",x:1,d:"B2B attribution & analytics.",w:"Ties multi-touch activity to pipeline and de-anonymizes intent.",g:"Shows what actually drives pipeline, not vanity clicks."},
- {n:"Gamma",c:"AI & LLM",x:1,d:"AI presentation/deck generator.",w:"Generates decks and one-pagers from prompts.",g:"Speeds up sales collateral production."},
- {n:"Intercom",c:"RevOps & Analytics",x:1,d:"Customer messaging & support platform.",w:"Runs website chat and lifecycle messaging.",g:"On-site engagement plus support-driven signals."},
- {n:"Lovable",c:"AI & LLM",x:1,d:"AI app builder.",w:"Generates internal GTM web apps from prompts, no code.",g:"Ships internal GTM tools in hours, not sprints."},
- {n:"Miro",c:"Content & Design",x:1,d:"Visual whiteboard.",w:"Maps GTM strategy and workflows visually.",g:"Aligns the team on the plan before building."},
- {n:"Octoparse",c:"Data & Enrichment",x:1,d:"No-code web scraper.",w:"Extracts structured data from websites without code.",g:"Builds custom prospect lists from any site."},
- {n:"Ordinal",c:"Content & Design",x:1,d:"Content-production tool.",w:"Operationalizes the content pipeline end-to-end.",g:"Sustains content output at scale."},
- {n:"Perplexity",c:"AI & LLM",x:1,d:"AI answer & research engine.",w:"Runs sourced web research for content and account intel.",g:"Fast, grounded research with citations."},
- {n:"Posthog",c:"RevOps & Analytics",x:1,d:"Product analytics (open source).",w:"Captures product events for usage-based scoring.",g:"Product signals feed PLG qualification."},
- {n:"Qwilr",c:"RevOps & Analytics",x:1,d:"Interactive proposal & quote tool.",w:"Creates trackable, web-based proposals and quotes.",g:"Speeds deal close with slick, trackable proposals."},
- {n:"Sales Navigator",c:"Sourcing & TAM",x:1,d:"LinkedIn's premium prospecting tool.",w:"Builds and saves targeted lead/account lists with advanced filters.",g:"Precision LinkedIn targeting for outreach."},
- {n:"Storeleads",c:"Sourcing & TAM",x:1,d:"Ecommerce store database.",w:"Lists online stores with platform, traffic and app data.",g:"Targets ecommerce ICPs at scale."},
- {n:"Sumble",c:"Sourcing & TAM",x:1,d:"Technographic & hiring-signal data.",w:"Reveals tech stack and hiring signals to time outreach.",g:"Times plays to real buying triggers."},
- {n:"TheSwarm",c:"Sourcing & TAM",x:1,d:"Team-network relationship intelligence.",w:"Surfaces warm paths into accounts via your team's connections.",g:"Turns dormant networks into warm intros."},
- {n:"ZenABM",c:"Signals & De-anon",x:1,d:"ABM advertising & signal platform.",w:"Runs account-based ad targeting tied to intent signals.",g:"Warms target accounts ahead of outreach."},
- {n:"Zenrows",c:"Data & Enrichment",x:1,d:"Web-scraping / anti-bot API.",w:"Extracts data from protected sites without getting blocked.",g:"Unlocks hard-to-scrape data sources."}
+ {n:"Clay",c:"Data & Enrichment",x:32,d:"GTM data-orchestration and enrichment platform built around a spreadsheet-style workbook, with 100+ integrated data providers and native AI agents for research and qualification.",w:"Aggregates, enriches, AI-qualifies and routes account/contact data from 100+ sources in one spreadsheet-like workbook.",g:"The central engine nearly every play runs through — where raw lists become CRM-ready pipeline."},
+ {n:"HubSpot",c:"CRM",x:25,d:"All-in-one CRM and marketing-automation platform spanning sales, marketing, service and ops hubs — the default revenue stack for mid-market B2B teams.",w:"Stores accounts, contacts and deals and automates lead routing, scoring, and lifecycle workflows.",g:"System of record for the entire revenue motion; where scores and stages live."},
+ {n:"Instantly",c:"Email Outreach",x:24,d:"Cold-email sending platform built for volume — unlimited connected inboxes, automated warmup, and deliverability tooling under one roof.",w:"Runs multi-inbox cold-email sequences with warmup and deliverability tooling.",g:"Scales cold email volume without burning sender domains."},
+ {n:"HeyReach",c:"LinkedIn & Social",x:20,d:"LinkedIn outreach-automation platform built for agencies and teams — rotates sends across multiple LinkedIn seats from a single campaign and unified inbox.",w:"Runs connection + message sequences across multiple LinkedIn accounts within safe limits.",g:"Scales LinkedIn outbound without triggering bans."},
+ {n:"ChatGPT",c:"AI & LLM",x:18,d:"OpenAI's flagship AI assistant, used both as an app and via API — the general-purpose LLM behind many qualification, classification and copy steps.",w:"Powers AI qualification, classification and copywriting inside Clay and workflow steps.",g:"Scales human-judgment tasks (qualify, score, personalize) across the pipeline."},
+ {n:"LinkedIn",c:"LinkedIn & Social",x:17,d:"The default B2B professional network, 1B+ members — the primary organic surface where B2B buyers research, post, and get prospected.",w:"Primary surface for social selling, content distribution, and prospecting.",g:"The core B2B demand and relationship channel everything orbits."},
+ {n:"Claude",c:"AI & LLM",x:16,d:"Anthropic's AI assistant, known for strong reasoning, long context windows, and reliable structured output over messy real-world data.",w:"Handles research, account qualification, copywriting and summarization across workflows.",g:"The reasoning layer that turns messy data into decisions and copy."},
+ {n:"Jungler.ai",c:"LinkedIn & Social",x:16,d:"LinkedIn signal-tracking tool that watches posts, comments, and profile activity across your market to surface engagement-based buying intent.",w:"Monitors posts, engagement and profile activity to surface intent signals.",g:"Turns social activity into timed outbound triggers."},
+ {n:"Slack",c:"RevOps & Analytics",x:14,d:"Team messaging platform and the de facto GTM ops console — webhooks and app integrations make it the alerting surface for the whole stack.",w:"Delivers real-time lead alerts, approvals and routing hand-offs to reps.",g:"The human-in-the-loop layer — fast approvals and hot-lead alerts."},
+ {n:"Apollo",c:"Sourcing & TAM",x:11,d:"B2B contact and company database (275M+ contacts) with built-in filters, sequencing, and an API — the workhorse for fast list building.",w:"Sources and filters target accounts and contacts by firmographic/technographic criteria.",g:"Fills top-of-funnel with ICP-matched prospects fast."},
+ {n:"Findymail",c:"Data & Enrichment",x:11,d:"Email-finding and verification service focused on accuracy — returns only deliverable, verified work emails instead of pattern guesses.",w:"Finds and validates work emails to keep bounce rates low.",g:"Protects deliverability and sender reputation on every send."},
+ {n:"Beehiiv",c:"Content & Design",x:8,d:"Newsletter publishing platform built by the ex-Morning Brew team, with growth, referral, ad-network and monetization features baked in.",w:"Publishes and grows email newsletters with built-in monetization.",g:"Owns the nurture channel and a first-party audience."},
+ {n:"BetterContact",c:"Data & Enrichment",x:8,d:"Waterfall enrichment aggregator that chains 20+ email and phone data providers in sequence and only charges for verified hits.",w:"Chains 20+ data providers to maximize contact-data hit rate.",g:"Higher contact coverage means more reachable prospects per list."},
+ {n:"AI Ark",c:"Data & Enrichment",x:8,d:"AI research-agent platform for enrichment — dispatches autonomous agents to research companies and people across the open web.",w:"Runs AI research to enrich and qualify accounts at scale.",g:"Automates the manual account research reps used to do by hand."},
+ {n:"RB2B",c:"Signals & De-anon",x:7,d:"Person-level website visitor de-anonymization for US traffic — identifies the individual, not just the company, with a free Slack-push tier.",w:"Identifies individual anonymous US site visitors and pushes them to Slack/CRM.",g:"Turns silent website traffic into named, actionable leads."},
+ {n:"Warmly",c:"Signals & De-anon",x:7,d:"Signal-based revenue-orchestration platform combining visitor de-anonymization with automated chat, email, and LinkedIn engagement plays.",w:"Reveals visiting accounts/people and triggers real-time engagement plays.",g:"Lets you act on warm intent while the visitor is still hot."},
+ {n:"Notion",c:"Content & Design",x:6,d:"All-in-one docs and database workspace — flexible enough to serve as content calendar, wiki, and approval pipeline in a single tool.",w:"Acts as the content system-of-record and approval hub before publishing.",g:"Keeps content ops organized and reviewable."},
+ {n:"Ocean.io",c:"Sourcing & TAM",x:6,d:"Lookalike-account and TAM-mapping database that models your best customers and finds the companies that most resemble them.",w:"Finds companies similar to your best customers to expand the TAM.",g:"Widens pipeline with high-fit lookalike accounts."},
+ {n:"Sybill",c:"Meetings & Calling",x:6,d:"AI sales-call assistant that records meetings, drafts follow-up emails, and auto-fills CRM fields from what was actually said.",w:"Records, summarizes and extracts insights and action items from sales calls.",g:"Better call intel and tighter follow-through after meetings."},
+ {n:"Amplitude",c:"RevOps & Analytics",x:5,d:"Enterprise product-analytics platform for tracking user behavior, funnels, and retention inside the product itself.",w:"Tracks product usage to score PLG accounts and awareness stages.",g:"Turns product usage into buying signals for scoring."},
+ {n:"Apify",c:"Data & Enrichment",x:5,d:"Web-scraping and automation marketplace — thousands of prebuilt \"actors\" plus infrastructure for running custom scrapers at scale.",w:"Runs actors to scrape LinkedIn, sites and social engagement at scale.",g:"Feeds engagement and signal data into the enrichment pipeline."},
+ {n:"Customer.io",c:"RevOps & Analytics",x:5,d:"Lifecycle-messaging platform for behavior-triggered email, push, SMS, and in-app messages across the whole customer journey.",w:"Automates behavior-triggered email and lifecycle nurture.",g:"Drives activation, nurture and retention on autopilot."},
+ {n:"Fibbler",c:"Signals & De-anon",x:5,d:"LinkedIn-ads attribution tool that matches ad-audience engagement back to accounts, showing which ads actually touched pipeline.",w:"Matches ad audiences and attributes LinkedIn-ad influence on pipeline.",g:"Proves ad contribution so spend can be optimized."},
+ {n:"Teamfluence",c:"LinkedIn & Social",x:5,d:"LinkedIn engagement-analytics tool that measures your team's collective reach — post engagement, connections, and profile visitors.",w:"Tracks team engagement, connections and profile visitors on LinkedIn.",g:"Mines employee networks for warm, in-market leads."},
+ {n:"Webflow",c:"Content & Design",x:5,d:"Visual website builder and CMS with a full API — design, host, and programmatically publish content without engineers in the loop.",w:"Hosts and auto-publishes site + blog content via CMS and API.",g:"The publishing endpoint that turns drafts into live pages."},
+ {n:"Claude Code",c:"AI & LLM",x:4,d:"Anthropic's agentic coding tool — runs in the terminal, reads files, executes commands, and carries out multi-step work through reusable skills.",w:"Runs multi-step GTM automations and data work through agentic skills.",g:"Automates end-to-end GTM ops that used to need an engineer."},
+ {n:"Crossbeam",c:"Signals & De-anon",x:4,d:"Partner-ecosystem data-sharing platform (merged with Reveal) that securely maps overlapping accounts between you and your partners.",w:"Maps account overlaps with partners to find warm intro paths.",g:"Unlocks partner-sourced pipeline and warmer entries."},
+ {n:"Discolike",c:"Sourcing & TAM",x:4,d:"AI lookalike-company finder that expands a seed list of good-fit accounts into much broader lists of similar companies.",w:"Generates broad lookalike company lists from seed accounts.",g:"Rapid TAM expansion built off proven winners."},
+ {n:"Ergo",c:"Content & Design",x:4,d:"Content-intelligence and ideation tool that mines what already performs in your niche and turns it into data-backed drafting input.",w:"Mines high-performing content and surfaces ideas for drafting.",g:"Feeds data-backed content ideas instead of guesswork."},
+ {n:"n8n",c:"RevOps & Analytics",x:4,d:"Source-available workflow-automation platform — a self-hostable Zapier alternative with 400+ integrations and native AI/agent nodes.",w:"Wires tools together and runs custom automations and RAG agents.",g:"The glue that connects the stack without hard-coding."},
+ {n:"Nooks",c:"Meetings & Calling",x:4,d:"AI parallel dialer that lets one rep dial multiple numbers simultaneously, with AI call scoring and pre-call account research built in.",w:"Runs parallel dials plus AI account-prep for calling sessions.",g:"Multiplies rep call throughput on warm lists."},
+ {n:"Outreach",c:"Email Outreach",x:4,d:"Enterprise sales-engagement platform covering cadences, forecasting, and conversation intelligence — built for larger sales orgs.",w:"Sequences email/call/task cadences for reps at scale.",g:"Structures and enforces consistent rep follow-up."},
+ {n:"Tally",c:"Meetings & Calling",x:4,d:"Free-first form builder with conditional logic, hidden fields, and webhooks — the fastest way to stand up lead-capture forms.",w:"Captures inbound leads and demo requests via forms and webhooks.",g:"The inbound-capture entry point feeding the pipeline."},
+ {n:"Chilipiper",c:"Meetings & Calling",x:4,d:"Inbound lead routing and scheduling platform — qualifies form fills in real time and books them straight onto the right rep's calendar.",w:"Instantly qualifies, routes and books inbound leads to the right rep.",g:"Zero-leakage inbound hand-off at peak intent."},
+ {n:"Cursor",c:"AI & LLM",x:3,d:"AI-native code editor (a VS Code fork) with agentic editing that can plan and apply changes across an entire codebase.",w:"Writes and edits scraping/automation code with AI assistance.",g:"Builds custom GTM scripts faster."},
+ {n:"Figma",c:"Content & Design",x:3,d:"Collaborative interface-design tool and the industry standard for product, marketing, and brand design work in the browser.",w:"Designs content graphics, lead magnets and design systems.",g:"Produces on-brand creative for content and capture."},
+ {n:"Freckle",c:"Signals & De-anon",x:3,d:"Website de-anonymization tool positioned as a lightweight visitor-identity layer — captures and identifies anonymous traffic for follow-up.",w:"Captures and identifies anonymous site visitors for follow-up.",g:"Expands the top-of-funnel capture net."},
+ {n:"Salesforce",c:"CRM",x:3,d:"The dominant enterprise CRM — deeply customizable objects, workflows, and an ecosystem of thousands of integrations and admins.",w:"Manages the full account/opportunity lifecycle for larger orgs.",g:"Enterprise-grade revenue system of record."},
+ {n:"Adobe",c:"Content & Design",x:2,d:"The Creative Cloud suite — Photoshop, Illustrator, Premiere and more — professional-grade tooling for graphics and video production.",w:"Produces graphics, video and high-end creative assets.",g:"Premium creative production for brand and content."},
+ {n:"BuiltWith",c:"Sourcing & TAM",x:2,d:"Website technology profiler that detects the analytics, CMS, ecommerce, and ad stack any site runs — queryable at list scale.",w:"Detects the tech a site runs to qualify technographic fit.",g:"Filters the TAM by tech-stack compatibility."},
+ {n:"Cal.com",c:"Meetings & Calling",x:2,d:"Open-source scheduling infrastructure — a self-hostable Calendly alternative with routing forms, round-robin, and a full API.",w:"Books meetings and routes leads to the right rep.",g:"Removes friction between intent and a booked call."},
+ {n:"Favikon",c:"LinkedIn & Social",x:2,d:"Creator and influencer analytics platform that scores creators by niche authority across LinkedIn and other social networks.",w:"Scores and finds LinkedIn creators and influencers.",g:"Identifies whose audience is worth tapping."},
+ {n:"G2",c:"Signals & De-anon",x:2,d:"The largest B2B software review marketplace — also sells buyer-intent data showing which companies are actively researching your category.",w:"Provides reviews and category-shopping intent signals.",g:"Surfaces in-market buyers actively comparing tools."},
+ {n:"Kondo",c:"LinkedIn & Social",x:2,d:"LinkedIn inbox manager that layers CRM-style pipelines, reminders, snippets, and labels on top of your LinkedIn DMs.",w:"Organizes and follows up on LinkedIn conversations like a CRM.",g:"Stops warm LinkedIn chats from leaking away."},
+ {n:"Magicpost.in",c:"LinkedIn & Social",x:2,d:"LinkedIn content tool for drafting, formatting, and scheduling posts with AI assistance and feed-accurate previews.",w:"Drafts, formats and schedules LinkedIn posts.",g:"Sustains a consistent content cadence."},
+ {n:"OutboundSync",c:"Signals & De-anon",x:2,d:"Attribution connector that syncs cold-outbound activity from Instantly and HeyReach into HubSpot as native, reportable activities.",w:"Syncs Instantly/HeyReach activity into HubSpot and attributes it.",g:"Makes outbound's true revenue impact measurable."},
+ {n:"Salesloft",c:"Email Outreach",x:2,d:"Enterprise sales-engagement platform for multi-touch cadences, rep coaching, and deal management across the revenue team.",w:"Manages multi-touch cadences and rep activity.",g:"Keeps outbound cadences consistent across the team."},
+ {n:"Serper",c:"Data & Enrichment",x:2,d:"Fast, low-cost Google Search API that returns structured SERP results for programmatic enrichment and verification steps.",w:"Pulls live search results to enrich or verify company data.",g:"Cheap real-time web signal for enrichment steps."},
+ {n:"TheirStack",c:"Sourcing & TAM",x:2,d:"Signal database that indexes job postings and detected technologies — find companies by the stack they run or the roles they're hiring.",w:"Finds companies by the tools they use or the roles they're hiring.",g:"Signal-based targeting on stack and hiring intent."},
+ {n:"VS Code",c:"AI & LLM",x:2,d:"Microsoft's free, extensible code editor — the default local environment for writing and running scripts and automation.",w:"Local environment for running scrapers and automation scripts.",g:"Home base for custom GTM tooling."},
+ {n:"Ahrefs",c:"RevOps & Analytics",x:1,d:"Industry-standard SEO toolset for keyword research, backlink analysis, rank tracking, and technical site audits.",w:"Analyzes keywords, backlinks and organic search signals.",g:"Informs content and SEO targeting decisions."},
+ {n:"Albacross",c:"Signals & De-anon",x:1,d:"Account-level visitor-identification platform with strong European data coverage — reveals which companies are on your site.",w:"Identifies the companies visiting your website.",g:"Reveals in-market accounts browsing anonymously."},
+ {n:"Attio",c:"CRM",x:1,d:"Modern, data-native CRM with flexible objects, real-time collaboration, and automations — built API-first for startups.",w:"Builds custom data models and workflows on a real-time CRM.",g:"Startup-friendly, data-native system of record."},
+ {n:"Browserbase",c:"Data & Enrichment",x:1,d:"Headless-browser infrastructure-as-a-service for running Playwright/Puppeteer automation and AI browsing agents at scale.",w:"Runs scalable browser automation for scraping and agents.",g:"Powers custom data collection at scale."},
+ {n:"Buffer",c:"LinkedIn & Social",x:1,d:"Social-media scheduling tool for planning, queuing, and publishing content across multiple channels from one calendar.",w:"Schedules and distributes content across social channels.",g:"Keeps multi-channel distribution consistent."},
+ {n:"Calendly",c:"Meetings & Calling",x:1,d:"The best-known meeting-scheduling tool — booking links, round-robin routing, and calendar sync with minimal setup.",w:"Automates meeting booking and routing.",g:"Captures meetings at the moment of peak intent."},
+ {n:"Capterra",c:"Signals & De-anon",x:1,d:"Gartner-owned software review and comparison site — its traffic and reviews signal active category shopping.",w:"Provides reviews and category-shopping intent data.",g:"Another source of in-market buyer signals."},
+ {n:"Cargo",c:"Data & Enrichment",x:1,d:"Revenue-data orchestration platform that centralizes, normalizes, and routes GTM data between warehouse, tools, and CRM.",w:"Centralizes, normalizes and routes GTM data between tools and CRM.",g:"Keeps the data layer clean and synced at scale."},
+ {n:"Crunchbase",c:"Sourcing & TAM",x:1,d:"Company and funding database tracking rounds, acquisitions, leadership, and growth signals across millions of private companies.",w:"Provides firmographics, funding and growth signals on accounts.",g:"Prioritizes accounts by funding and growth timing."},
+ {n:"Default.com",c:"Meetings & Calling",x:1,d:"Inbound conversion platform combining forms, qualification, enrichment, routing, and scheduling in a single flow.",w:"Qualifies, routes and books inbound demos in one flow.",g:"Converts inbound faster with less leakage."},
+ {n:"Factors.ai",c:"Signals & De-anon",x:1,d:"B2B attribution and analytics platform that ties multi-touch marketing activity to pipeline, with account de-anonymization built in.",w:"Ties multi-touch activity to pipeline and de-anonymizes intent.",g:"Shows what actually drives pipeline, not vanity clicks."},
+ {n:"Gamma",c:"AI & LLM",x:1,d:"AI presentation builder that generates polished decks, docs, and one-pagers from a prompt, with web-native sharing.",w:"Generates decks and one-pagers from prompts.",g:"Speeds up sales collateral production."},
+ {n:"Intercom",c:"RevOps & Analytics",x:1,d:"Customer messaging and support platform — website chat, help desk, and the Fin AI agent for automated support.",w:"Runs website chat and lifecycle messaging.",g:"On-site engagement plus support-driven signals."},
+ {n:"Lovable",c:"AI & LLM",x:1,d:"AI app builder that turns plain-language prompts into working full-stack web apps — no code required.",w:"Generates internal GTM web apps from prompts, no code.",g:"Ships internal GTM tools in hours, not sprints."},
+ {n:"Miro",c:"Content & Design",x:1,d:"Collaborative online whiteboard for mapping strategy, workflows, and systems visually with the whole team.",w:"Maps GTM strategy and workflows visually.",g:"Aligns the team on the plan before building."},
+ {n:"Octoparse",c:"Data & Enrichment",x:1,d:"No-code web scraper with a point-and-click interface for extracting structured data from almost any website.",w:"Extracts structured data from websites without code.",g:"Builds custom prospect lists from any site."},
+ {n:"Ordinal",c:"Content & Design",x:1,d:"Content-production platform that operationalizes the pipeline from ideation through drafting, review, and publishing.",w:"Operationalizes the content pipeline end-to-end.",g:"Sustains content output at scale."},
+ {n:"Perplexity",c:"AI & LLM",x:1,d:"AI answer engine that runs live web research and returns cited, sourced answers instead of unsourced generations.",w:"Runs sourced web research for content and account intel.",g:"Fast, grounded research with citations."},
+ {n:"Posthog",c:"RevOps & Analytics",x:1,d:"Open-source product-analytics suite — events, session replay, feature flags, and A/B testing in one self-hostable platform.",w:"Captures product events for usage-based scoring.",g:"Product signals feed PLG qualification."},
+ {n:"Qwilr",c:"RevOps & Analytics",x:1,d:"Interactive proposal and quote tool that turns sales documents into trackable web pages with embedded pricing and e-sign.",w:"Creates trackable, web-based proposals and quotes.",g:"Speeds deal close with slick, trackable proposals."},
+ {n:"Sales Navigator",c:"Sourcing & TAM",x:1,d:"LinkedIn's premium prospecting product — advanced lead and account filters, saved lists, alerts, and buyer-intent signals.",w:"Builds and saves targeted lead/account lists with advanced filters.",g:"Precision LinkedIn targeting for outreach."},
+ {n:"Storeleads",c:"Sourcing & TAM",x:1,d:"Ecommerce store database indexing millions of online stores with platform, installed-app, and traffic data.",w:"Lists online stores with platform, traffic and app data.",g:"Targets ecommerce ICPs at scale."},
+ {n:"Sumble",c:"Sourcing & TAM",x:1,d:"Technographic and hiring-signal database that mines job posts to reveal what tech companies actually run internally.",w:"Reveals tech stack and hiring signals to time outreach.",g:"Times plays to real buying triggers."},
+ {n:"TheSwarm",c:"Sourcing & TAM",x:1,d:"Relationship-intelligence platform that maps your whole team's combined networks to find warm paths into target accounts.",w:"Surfaces warm paths into accounts via your team's connections.",g:"Turns dormant networks into warm intros."},
+ {n:"ZenABM",c:"Signals & De-anon",x:1,d:"ABM advertising platform that ties LinkedIn ad targeting and spend to account-level intent signals and pipeline.",w:"Runs account-based ad targeting tied to intent signals.",g:"Warms target accounts ahead of outreach."},
+ {n:"Zenrows",c:"Data & Enrichment",x:1,d:"Web-scraping API with rotating proxies and anti-bot bypass for extracting data from protected or heavily defended sites.",w:"Extracts data from protected sites without getting blocked.",g:"Unlocks hard-to-scrape data sources."}
 ];
 
 const ORDER = Object.keys(CATS);
@@ -284,6 +350,27 @@ document.getElementById('foot').innerHTML =
   "Descriptions and GTM impact are Bowtie Funnel's interpretation, grounded in how each tool is used across the 48 workflows — not vendor copy. "+
   "Usage counts merge casing variants (Jungler.ai/Jungler, AI&nbsp;Ark/Aiark, Chilipiper/ChilliPiper).";
 apply();
+
+// exports — built from the same DATA the table renders, so they never drift
+const HEAD=["Tool","Category","Used in N of 48 workflows","Description","What it does","GTM impact"];
+const rows=()=>DATA.map(t=>[t.n,t.c,t.x,t.d,t.w,t.g]);
+document.getElementById('dl-csv').addEventListener('click',()=>{
+  const esc=v=>`"${String(v).replace(/"/g,'""')}"`;
+  const csv=[HEAD,...rows()].map(r=>r.map(esc).join(',')).join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(["﻿"+csv],{type:'text/csv'}));
+  a.download='bowtie-funnel-gtm-tools.csv'; a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById('dl-md').addEventListener('click',e=>{
+  const md=["# Bowtie Funnel GTM tool stack — 76 tools across 48 mapped workflows",
+    "Source: https://labs.bowtiefunnel.com/tools/","",
+    ...DATA.map(t=>`## ${t.n} (${t.c} — used in ${t.x} of 48 workflows)\n- Description: ${t.d}\n- What it does: ${t.w}\n- GTM impact: ${t.g}`)
+  ].join('\n');
+  navigator.clipboard.writeText(md).then(()=>{
+    const b=e.target; b.textContent='✓ Copied — paste into any AI chat';
+    setTimeout(()=>b.textContent='⧉ Copy for AI',2200);
+  });
+});
 </script>
 </body>
 </html>
