@@ -1,0 +1,7 @@
+{
+  "name": "bowtie-gtm",
+  "version": "0.1.0",
+  "description": "GTM agent skills for Claude Code — playbooks repurposed from the Growth (Verbiflow) MCP and mapped to the bowtie customer lifecycle. Bundles the Growth MCP server so the skills run out of the box.",
+  "author": { "name": "Bowtie Funnel", "url": "https://labs.bowtiefunnel.com" },
+  "license": "MIT"
+}

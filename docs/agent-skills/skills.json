@@ -23,6 +23,7 @@
     },
     {
       "name": "Website Visitor De-anonymizer",
+      "slug": "website-visitor-deanon",
       "lifecycle": ["Awareness", "Retention"],
       "description": "Turns anonymous website traffic into named contacts and companies we can route straight to sales — or, aimed at current clients, into an account-activity signal."
     },

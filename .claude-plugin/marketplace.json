@@ -1,0 +1,11 @@
+{
+  "name": "bowtie-funnel",
+  "owner": { "name": "Bowtie Funnel", "url": "https://labs.bowtiefunnel.com" },
+  "plugins": [
+    {
+      "name": "bowtie-gtm",
+      "source": "./plugins/bowtie-gtm",
+      "description": "Bowtie Funnel's GTM agent skills — playbooks repurposed from the Growth (Verbiflow) MCP, plus the MCP server itself, mapped to the customer lifecycle."
+    }
+  ]
+}

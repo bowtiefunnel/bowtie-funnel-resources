@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>website-visitor-deanon — Bowtie Funnel Agent Skills</title>
+<meta name="description" content="A Claude Code agent skill that turns anonymous website traffic into named contacts — net-new leads (awareness) or account-activity signal on existing clients (retention). Repurposed from the Growth MCP.">
+<style>
+  :root {
+    --paper: #eef1f6; --surface: #ffffff; --ink: #161a22; --muted: #5b6472;
+    --line: #dbe1ea; --accent: #2f6fce; --accent-soft: #e4edfb; --good: #2f8f5b; --warn: #9a6b1a;
+    --radius: 10px;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --measure: 66ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #0e1116; --surface: #161b23; --ink: #e7ebf1; --muted: #98a2b1;
+      --line: #242c37; --accent: #5a9cf0; --accent-soft: #17263c; --good: #4bb37c; --warn: #c79a4e; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
+  .sn-brand{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;margin-right:auto;white-space:nowrap;}
+  .sn-brand .slash{color:var(--accent);}
+  .sn-tab{font-family:var(--sans);font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
+  .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+  .sn-tab.active{opacity:1;color:var(--accent);font-weight:600;}
+  @media(max-width:520px){.sn-brand{font-size:12px;}.sn-tab{padding:6px 7px;font-size:12.5px;}}
+
+  .wrap { max-width: 940px; margin: 0 auto; padding: clamp(28px, 6vw, 64px) clamp(20px, 5vw, 40px) 80px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  .eyebrow a{color:var(--muted);text-decoration:none;} .eyebrow a:hover{color:var(--accent);}
+  .eyebrow .sep { color: var(--muted); margin: 0 8px; }
+  h1 { font-family: var(--mono); font-size: clamp(30px, 5.5vw, 50px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.02; margin: 0 0 20px; text-wrap: balance; }
+  h1 .slash { color: var(--accent); }
+  .lede { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); max-width: var(--measure); margin: 0 0 12px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .lede a { color: var(--accent); text-decoration: none; } .lede a:hover { text-decoration: underline; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 5px 11px; border: 1px solid var(--line); border-radius: 100px; color: var(--muted); background: var(--surface); }
+  .chip.mit { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+  .chip.stg { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, var(--line)); }
+
+  section { margin-top: clamp(48px, 8vw, 80px); }
+  h2 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .prose { max-width: var(--measure); }
+
+  .transform { margin-top: 40px; display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(14px, 3vw, 28px); align-items: stretch; }
+  @media (max-width: 680px) { .transform { grid-template-columns: 1fr; } .arrow { transform: rotate(90deg); justify-self: center; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .panel-head { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 11px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .panel-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .panel.after .panel-head { color: var(--good); }
+  .panel.after .panel-head .dot { background: var(--good); }
+  .panel ul { margin: 0; padding: 16px 18px 18px 34px; }
+  .panel li { font-size: 14px; color: var(--muted); margin: 0 0 9px; }
+  .panel li b { color: var(--ink); font-weight: 600; }
+  .panel.after li { color: var(--ink); }
+  .arrow { font-family: var(--mono); font-size: 22px; color: var(--accent); align-self: center; text-align: center; }
+
+  .flow { margin-top: 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: var(--mono); font-size: 13px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+  .flow .arw { color: var(--accent); font-weight: 700; }
+  .flow b { color: var(--ink); }
+
+  ol.steps { max-width: var(--measure); padding-left: 20px; margin: 0; }
+  ol.steps li { margin: 0 0 12px; }
+  ol.steps code, .prose code, .use-note code { font-family: var(--mono); color: var(--accent); font-size: 13px; }
+
+  pre.code { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.7; margin: 0 0 16px; color: var(--ink); }
+  pre.code .c { color: var(--muted); }
+  pre.code .p { color: var(--accent); }
+  .use-note { color: var(--muted); margin: 4px 0 10px; }
+  .opt-h { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); margin: 26px 0 10px; }
+
+  footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+  footer a { color: var(--accent); text-decoration: none; }
+  a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<nav class="sitenav"><div class="sn-inner">
+  <a class="sn-brand" href="/"><span class="slash">/</span>Bowtie&nbsp;Funnel&nbsp;Labs</a>
+  <a class="sn-tab" href="/">Skills</a>
+  <a class="sn-tab" href="/tools/">Tools</a>
+  <a class="sn-tab active" href="/agent-skills/">Agent Skills</a>
+</div></nav>
+
+<div class="wrap">
+  <p class="eyebrow"><a href="/agent-skills/">Agent Skills</a> <span class="sep">/</span> website-visitor-deanon</p>
+  <h1><span class="slash">/</span>website-visitor-deanon</h1>
+  <p class="lede">Anonymous traffic is your warmest, most-wasted audience — people researching you right now, and you never learn who.</p>
+  <p class="lede"><strong>This skill puts names on them.</strong> It resolves anonymous visitors to real contacts and companies, qualifies them, and routes them — as net-new leads, or as an activity signal on clients you already have.</p>
+
+  <div class="meta">
+    <span class="chip mit" tabindex="0">MIT</span>
+    <span class="chip" tabindex="0">Claude&nbsp;Code skill</span>
+    <span class="chip stg" tabindex="0">Awareness</span>
+    <span class="chip stg" tabindex="0">Retention</span>
+    <span class="chip" tabindex="0">runs on Growth&nbsp;MCP</span>
+  </div>
+
+  <section aria-label="Before and after">
+    <h2>The repurpose — raw tool → Bowtie skill</h2>
+    <div class="transform">
+      <div class="panel before">
+        <div class="panel-head"><span class="dot"></span>before — raw MCP</div>
+        <ul>
+          <li>Two bare tools: <b>deanonymize_contacts → get_results</b></li>
+          <li>Output is a private <b>artifact_id</b> inside Verbiflow</li>
+          <li>No positioning, no deliverable, no reuse</li>
+          <li>Invisible to the client</li>
+        </ul>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="panel after">
+        <div class="panel-head"><span class="dot"></span>after — Bowtie Funnel skill</div>
+        <ul>
+          <li><b>Rebranded + placed</b> at Awareness &amp; Retention on the bowtie</li>
+          <li><b>Wrapped in a play:</b> de-anon → enrich → qualify → route</li>
+          <li><b>Output published</b> to a branded labs URL, not a CSV</li>
+          <li><b>Reused by aim:</b> new traffic = leads; client domains = account signal</li>
+        </ul>
+      </div>
+    </div>
+    <div class="flow"><span>anonymous traffic</span><span class="arw">→</span><span><b>de-anon</b></span><span class="arw">→</span><span>enrich</span><span class="arw">→</span><span>qualify</span><span class="arw">→</span><span><b>labs.bowtiefunnel.com/&lt;client&gt;/</b></span></div>
+  </section>
+
+  <section>
+    <h2>How it runs</h2>
+    <ol class="steps prose">
+      <li><code>growth_session_init</code> — auth + workspace.</li>
+      <li><code>growth_deanonymize_contacts</code> — resolve anonymous traffic to contacts/companies.</li>
+      <li><code>growth_get_deanonymize_contacts_results</code> — page the rows (returns an <code>artifact_id</code>).</li>
+      <li><code>growth_enrich_emails</code> / <code>growth_fetch_person_profiles</code> — fill emails, titles, attributes.</li>
+      <li><code>growth_qualify_rows</code> — score against the ICP; keep A/B fit (caps at 500 rows/call).</li>
+      <li><b>Route:</b> unknown companies → sequence or sales (Awareness); existing-customer domains → at-risk / activity signal (Retention).</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Get this skill</h2>
+
+    <p class="opt-h">Option A — install the GTM plugin (skill + MCP, everything)</p>
+    <pre class="code"><span class="c"># add the marketplace, then install the plugin</span>
+<span class="p">/plugin marketplace add</span> bowtiefunnel/bowtie-funnel-Labs
+<span class="p">/plugin install</span> bowtie-gtm@bowtie-funnel</pre>
+    <p class="use-note">Bundles this skill (and the rest) plus the Growth MCP server, wired up.</p>
+
+    <p class="opt-h">Option B — just this skill</p>
+    <pre class="code"><span class="c"># 1) add the Growth MCP once (the engine the skill calls)</span>
+claude mcp add --transport stdio growth -- npx -y growth-mcp
+
+<span class="c"># 2) copy this one skill into your Claude Code skills dir</span>
+cp -r plugins/bowtie-gtm/skills/website-visitor-deanon ~/.claude/skills/</pre>
+    <p class="prose use-note">Then invoke it, or just say what you want:</p>
+    <pre class="code"><span class="p">/website-visitor-deanon</span>
+
+<span class="c"># or, in plain language —</span>
+<span class="c"># "who visited our site this week?"</span>
+<span class="c"># "de-anonymize last week's traffic and score it against our ICP"</span></pre>
+  </section>
+
+  <footer>
+    <span>Bowtie Funnel Labs · MIT</span>
+    <span><a href="https://github.com/bowtiefunnel/bowtie-funnel-Labs">github.com/bowtiefunnel</a></span>
+  </footer>
+</div>
+</body>
+</html>

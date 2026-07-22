@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "growth": {
+      "command": "npx",
+      "args": ["-y", "growth-mcp"]
+    }
+  }
+}

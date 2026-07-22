@@ -208,7 +208,26 @@ mutual commit, onboarding, retention, expansion), with a stage filter.
 
 Single source of truth is [`docs/agent-skills/skills.json`](docs/agent-skills/skills.json)
 (the page and AI agents both read it). **To add a skill, append one object** —
-`name`, `lifecycle` (array of stages), `description`.
+`name`, `lifecycle` (array of stages), `description`, and optional `slug` (links the row
+to a per-skill page at `/agent-skills/<slug>/`).
+
+## Install as a Claude Code plugin
+
+This repo is also a **Claude Code plugin marketplace**
+([`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)). The `bowtie-gtm`
+plugin bundles the GTM agent-skill playbooks **and** the Growth (Verbiflow) MCP server:
+
+```
+/plugin marketplace add bowtiefunnel/bowtie-funnel-Labs
+/plugin install bowtie-gtm@bowtie-funnel
+```
+
+Or grab a single skill + the MCP by hand:
+
+```bash
+claude mcp add --transport stdio growth -- npx -y growth-mcp
+cp -r plugins/bowtie-gtm/skills/<skill-name> ~/.claude/skills/
+```
 
 ## License
 

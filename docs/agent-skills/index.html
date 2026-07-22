@@ -64,6 +64,10 @@
   .stage { display:inline-block; font-size:10.5px; font-weight:600; padding:2px 8px; margin:0 4px 4px 0;
     border-radius:999px; white-space:nowrap; border:1px solid transparent; }
   .skill-name { font-weight:650; font-size:14.5px; margin:0; letter-spacing:-.01em; }
+  .skill-link { color:var(--ink); text-decoration:none; }
+  .skill-link:hover { color:var(--accent-ink); }
+  .skill-link .go { color:var(--accent-ink); opacity:0; transition:opacity .12s; font-weight:700; }
+  .skill-link:hover .go { opacity:1; }
   .desc { font-size:13px; color:var(--ink-soft); }
   footer { margin-top:26px; font-size:12px; color:var(--ink-faint); max-width:80ch; }
   .hidden { display:none; }
@@ -209,7 +213,7 @@ const STAGE_ORDER=Object.keys(STAGES);
 
 // single source of truth: skills.json — the same file AI agents can fetch
 const DATA=(await fetch('skills.json').then(r=>r.json())).skills
-  .map(s=>({n:s.name,l:s.lifecycle||[],d:s.description}));
+  .map(s=>({n:s.name,l:s.lifecycle||[],d:s.description,slug:s.slug||null}));
 
 DATA.sort((a,b)=> (STAGE_ORDER.indexOf(a.l[0]) - STAGE_ORDER.indexOf(b.l[0])) || a.n.localeCompare(b.n));
 document.getElementById('total').textContent=DATA.length;
@@ -219,7 +223,11 @@ function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=nu
 
 DATA.forEach(s=>{
   const tr=el('tr'); tr.dataset.stages=s.l.join('|');
-  const tdSkill=el('td','c-skill'); tdSkill.appendChild(el('div','skill-name',s.n)); tr.appendChild(tdSkill);
+  const tdSkill=el('td','c-skill');
+  const name = s.slug
+    ? `<a class="skill-link" href="${s.slug}/">${s.n} <span class="go">→</span></a>`
+    : s.n;
+  tdSkill.appendChild(el('div','skill-name',name)); tr.appendChild(tdSkill);
   const chips = s.l.length===STAGE_ORDER.length
     ? `<span class="stage" style="color:var(--ink-soft);border-color:var(--line-strong)">All stages</span>`
     : s.l.map(x=>{const sc=STAGES[x]||"#6b7688";
