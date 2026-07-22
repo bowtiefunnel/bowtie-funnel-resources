@@ -119,11 +119,12 @@
 .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
 .sn-inner{max-width:1340px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
 .sn-brand{display:flex;align-items:center;text-decoration:none;}
-.sn-brand img{height:26px;width:auto;display:block;}
-.sn-logo-dark{display:none;}
-@media(prefers-color-scheme:dark){.sn-logo-light{display:none;}.sn-logo-dark{display:block;}}
-:root[data-theme="light"] .sn-logo-light{display:block;} :root[data-theme="light"] .sn-logo-dark{display:none;}
-:root[data-theme="dark"] .sn-logo-light{display:none;} :root[data-theme="dark"] .sn-logo-dark{display:block;}
+.sn-labs{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;font-size:15px;color:var(--accent);text-decoration:none;letter-spacing:-.02em;margin-left:2px;}
+.sn-brand img{height:26px;width:auto;}
+.sn-brand .sn-logo-dark{display:none;}
+@media(prefers-color-scheme:dark){.sn-brand .sn-logo-light{display:none;}.sn-brand .sn-logo-dark{display:block;}}
+:root[data-theme="light"] .sn-brand .sn-logo-light{display:block;} :root[data-theme="light"] .sn-brand .sn-logo-dark{display:none;}
+:root[data-theme="dark"] .sn-brand .sn-logo-light{display:none;} :root[data-theme="dark"] .sn-brand .sn-logo-dark{display:block;}
 .sn-cta{margin-left:auto;background:var(--accent);color:#fff;font-family:system-ui,-apple-system,sans-serif;font-size:13px;font-weight:600;text-decoration:none;padding:7px 14px;border-radius:8px;white-space:nowrap;transition:opacity .12s;}
 .sn-cta:hover{opacity:.9;}
 .sn-tab{font-family:system-ui,-apple-system,sans-serif;font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
@@ -138,6 +139,7 @@
     <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
     <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
   </a>
+  <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
   <a class="sn-tab" href="/">Skills</a>
   <a class="sn-tab active" href="/tools/">Tools</a>
   <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
