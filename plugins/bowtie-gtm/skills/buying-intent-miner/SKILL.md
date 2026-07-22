@@ -21,7 +21,7 @@ Always call `growth_session_init` first (auth + workspace).
 
 1. `growth_session_init` — auth + workspace.
 2. `growth_linkedin_search_posts` — find posts on your topic.
-3. `growth_get_post_comments` / `growth_get_post_reactions` — pull the people engaging.
+3. `growth_linkedin_get_post_comments` / `growth_linkedin_get_post_reactions` — pull the people engaging.
 4. `growth_fetch_person_comments` / `growth_fetch_person_reactions` — deepen the intent signal per person.
 5. Enrich, then sequence with a hook referencing what they engaged with.
 
