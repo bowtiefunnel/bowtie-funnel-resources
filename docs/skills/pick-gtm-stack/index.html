@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pick-gtm-stack — Bowtie Funnel Resources</title>
+<meta name="description" content="A Claude Code skill that picks the right GTM tools for a task or play — recalled live from the mapped 76-tool stack (lifecycle stages, categories, usage counts), not guessed from training data.">
+<style>
+  :root {
+    --paper: #eef1f6; --surface: #ffffff; --ink: #161a22; --muted: #5b6472;
+    --line: #dbe1ea; --accent: #2f6fce; --accent-soft: #e4edfb; --good: #2f8f5b; --warn: #9a6b1a;
+    --radius: 10px;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --measure: 66ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #0e1116; --surface: #161b23; --ink: #e7ebf1; --muted: #98a2b1;
+      --line: #242c37; --accent: #5a9cf0; --accent-soft: #17263c; --good: #4bb37c; --warn: #c79a4e; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
+  .sn-brand{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink);text-decoration:none;letter-spacing:-.01em;margin-right:auto;white-space:nowrap;}
+  .sn-brand .slash{color:var(--accent);}
+  .sn-tab{font-family:var(--sans);font-size:13.5px;color:var(--ink);opacity:.55;text-decoration:none;padding:6px 10px;border-radius:7px;transition:opacity .12s,background .12s;}
+  .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+  .sn-tab.active{opacity:1;color:var(--accent);font-weight:600;}
+  @media(max-width:520px){.sn-brand{font-size:12px;}.sn-tab{padding:6px 7px;font-size:12.5px;}}
+
+  .wrap { max-width: 940px; margin: 0 auto; padding: clamp(28px, 6vw, 64px) clamp(20px, 5vw, 40px) 80px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  .eyebrow a{color:var(--muted);text-decoration:none;} .eyebrow a:hover{color:var(--accent);}
+  .eyebrow .sep { color: var(--muted); margin: 0 8px; }
+  h1 { font-family: var(--mono); font-size: clamp(34px, 6.5vw, 58px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.02; margin: 0 0 20px; text-wrap: balance; }
+  h1 .slash { color: var(--accent); }
+  .lede { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); max-width: var(--measure); margin: 0 0 12px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 5px 11px; border: 1px solid var(--line); border-radius: 100px; color: var(--muted); background: var(--surface); }
+  .chip.mit { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+
+  section { margin-top: clamp(48px, 8vw, 72px); }
+  h2 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .prose { max-width: var(--measure); }
+  .prose p { margin: 0 0 16px; }
+  .prose code, .role code { font-family: var(--mono); color: var(--accent); font-size: 13.5px; }
+  .prose strong { color: var(--ink); }
+
+  ol.gates { counter-reset: g; list-style: none; margin: 0; padding: 0; max-width: var(--measure); }
+  ol.gates li { position: relative; padding: 4px 0 18px 44px; }
+  ol.gates li::before { counter-increment: g; content: counter(g); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-family: var(--mono); font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  ol.gates li b { color: var(--ink); }
+  ol.gates li span { color: var(--muted); }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 680px) { .cards { grid-template-columns: 1fr; } }
+  a.card { display:block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; text-decoration:none; color:var(--ink); transition:border-color .15s,transform .15s; }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  a.card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: inline-block; padding: 4px 10px; background: var(--accent-soft); border-radius: 6px; margin-bottom: 14px; }
+  a.card h3 { font-size: 17px; margin: 0 0 8px; }
+  a.card p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
+  a.card .go { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+
+  ul.flags { max-width: var(--measure); margin: 0; padding: 0; list-style: none; }
+  ul.flags li { position: relative; padding: 0 0 14px 26px; color: var(--muted); }
+  ul.flags li::before { content: "▲"; position: absolute; left: 0; top: 1px; color: var(--warn); font-size: 12px; }
+  ul.flags li b { color: var(--ink); font-weight: 600; }
+
+  pre.code { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.7; margin: 0 0 16px; color: var(--ink); }
+  pre.code .c { color: var(--muted); }
+  pre.code .p { color: var(--accent); }
+  .use-note { color: var(--muted); margin: 16px 0 10px; }
+
+  footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+  footer a { color: var(--accent); text-decoration: none; }
+  a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<nav class="sitenav"><div class="sn-inner">
+  <a class="sn-brand" href="/"><span class="slash">/</span>Bowtie&nbsp;Funnel&nbsp;Resources</a>
+  <a class="sn-tab active" href="/">Skills</a>
+  <a class="sn-tab" href="/tools/">Tools</a>
+</div></nav>
+
+<div class="wrap">
+  <p class="eyebrow"><a href="/">Skills</a> <span class="sep">/</span> pick-gtm-stack</p>
+  <h1><span class="slash">/</span>pick-gtm-stack</h1>
+  <p class="lede">Most GTM stacks are assembled by vibes — a tool per blog post, overlap everywhere, gaps where it counts.</p>
+  <p class="lede"><strong>pick-gtm-stack recommends tools from a mapped, living dataset</strong> — 76 tools tagged by job category, customer-lifecycle stage, and real usage across 48 workflows — so the stack for a play is recalled, not guessed.</p>
+
+  <div class="meta">
+    <span class="chip mit" tabindex="0">MIT</span>
+    <span class="chip" tabindex="0">Claude&nbsp;Code skill</span>
+    <span class="chip" tabindex="0">tool selection</span>
+    <span class="chip" tabindex="0">lifecycle-aware</span>
+  </div>
+
+  <section>
+    <h2>What it does</h2>
+    <div class="prose">
+      <p>Describe a GTM task — a cold outbound play, a visitor de-anon motion, a nurture sequence, a client stack audit. The skill classifies it by <b>lifecycle stage</b> (awareness → education → selection → mutual commit → onboarding → retention → expansion) and the <b>jobs</b> it needs, then fetches the live dataset at <code>tools.json</code> and filters to the tools that actually serve those stages and jobs.</p>
+      <p>The output is a minimal stack: one tool per job, ranked by how many of the 48 mapped workflows already use it, each with its role and GTM impact — plus the close alternatives <b>NOT chosen and why</b>, so the stack doesn't bloat. Jobs no mapped tool covers get flagged honestly instead of papered over.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ol class="gates">
+      <li><b>Classify the play</b> <span>— which lifecycle stages it targets and which job categories it needs (sourcing, enrichment, outreach, signals, meetings…).</span></li>
+      <li><b>Fetch the dataset live.</b> <span><code>curl -s https://labs.bowtiefunnel.com/tools/tools.json</code> — it evolves with the stack; a recommendation from memory is stale by definition.</span></li>
+      <li><b>Filter, then rank</b> <span>— lifecycle ∩ stages, category = job, ranked by <code>workflows_used</code> (battle-tested beats shiny).</span></li>
+      <li><b>Propose the minimal stack</b> <span>— one tool per job, each with its role and GTM impact, plus the alternatives NOT chosen and why.</span></li>
+      <li><b>Flag gaps honestly</b> <span>— "not in the mapped stack" + a research pointer, never an invented entry.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>The dataset it recalls</h2>
+    <div class="cards">
+      <a class="card" href="/tools/">
+        <span class="tag">browse</span>
+        <h3>The GTM tool stack, mapped</h3>
+        <p>All 76 tools with descriptions, categories, lifecycle-stage chips, and usage counts — the human-readable view of the same data.</p>
+        <span class="go">Open the table →</span>
+      </a>
+      <a class="card" href="/tools/tools.json">
+        <span class="tag">endpoint</span>
+        <h3>tools.json</h3>
+        <p>The raw dataset — fetch it from Claude Code, Cursor, or any script. Category, lifecycle, usage count, and impact per tool.</p>
+        <span class="go">Fetch the JSON →</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Red flags it kills</h2>
+    <ul class="flags">
+      <li><b>Recommending from training data</b> instead of fetching the dataset → stale tools, wrong usage counts.</li>
+      <li><b>Two overlapping tools for one job</b> with no stated reason → stack bloat.</li>
+      <li><b>"All stages" infrastructure as the answer to a specific job</b> → HubSpot being everywhere doesn't find lookalike accounts.</li>
+      <li><b>An awareness play staffed with retention tools</b> (or vice versa) → the lifecycle lens exists to catch exactly this.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Install &amp; use</h2>
+    <pre class="code"><span class="c"># copy the skill into your Claude Code skills directory</span>
+cp -r skills/pick-gtm-stack ~/.claude/skills/</pre>
+    <p class="prose use-note">Then invoke it directly, or just describe the task:</p>
+    <pre class="code"><span class="p">/pick-gtm-stack</span>
+
+<span class="c"># or, in plain language —</span>
+<span class="c"># "what tools should I use for a cold outbound play?"</span>
+<span class="c"># "build a stack for de-anonymizing site visitors"</span>
+<span class="c"># "audit this client's tool stack for overlap"</span></pre>
+  </section>
+
+  <footer>
+    <span>Bowtie Funnel Resources · MIT</span>
+    <span><a href="https://github.com/bowtiefunnel/bowtie-funnel-resources">github.com/bowtiefunnel</a></span>
+  </footer>
+</div>
+</body>
+</html>

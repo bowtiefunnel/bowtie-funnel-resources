@@ -99,6 +99,36 @@ itself:
 > "organize this agent folder"
 > "scaffold a new agent that answers support tickets"
 
+### [`pick-gtm-stack`](skills/pick-gtm-stack/)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-6b46c1.svg)
+
+Pick the right GTM tools for a task or play — recommended from the mapped
+76-tool Bowtie Funnel stack instead of guessed from training data.
+
+The skill's recall dataset is the live JSON at
+[labs.bowtiefunnel.com/tools/tools.json](https://labs.bowtiefunnel.com/tools/tools.json):
+76 tools tagged by job category, customer-lifecycle stage (awareness → expansion),
+and real usage across 48 mapped workflows. The skill classifies the play, fetches
+the dataset, filters by lifecycle + category, ranks by proven usage, and proposes
+a minimal stack — including the alternatives NOT chosen, so stacks don't bloat.
+
+**Install:**
+
+```bash
+# personal (all projects)
+cp -r skills/pick-gtm-stack ~/.claude/skills/
+
+# or project-scoped
+cp -r skills/pick-gtm-stack /path/to/project/.claude/skills/
+```
+
+Invoke it with `/pick-gtm-stack`, or just describe the task:
+
+> "what tools should I use for a cold outbound play?"
+> "build a stack for de-anonymizing site visitors"
+
 ## Tools
 
 Reusable runtime code (not skills) — copy the file, import it.
