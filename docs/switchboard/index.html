@@ -3,131 +3,123 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LLM Switchboard — route prompts to the right model — Bowtie Funnel</title>
-<meta name="description" content="Paste a prompt, see which tier it lands in and which model it routes to. Free open-weight for workflow miles, frontier models for thinking.">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>LLM Switchboard → OpenRouter — Bowtie Funnel</title>
+<meta name="description" content="A local prompt router that sits before OpenRouter: classify a prompt, pick the model, then call. Free open-weight for workflow, frontier for thinking.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#0d1430; --navy-deep:#0a1330; --cream:#ece9e3;
-    --purple:#6B29F7; --purple-light:#b78aff; --sky:#a8e8f7;
-    --mint:#86efac; --lavender:#d4b3ff; --amber:#ffcf7a;
+    --bg:#ffffff; --ink:#14162e; --muted:#6a6d85; --line:#e6e6ee; --card:#fbfbfd;
+    --purple:#6B29F7; --purple-soft:#f2ecff;
+    --simple:#16a34a; --medium:#d97706; --complex:#e11d48; --reasoning:#6B29F7;
+    --sky:#0ea5b7;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{
-    background:radial-gradient(1400px 900px at 50% -10%, #142052 0%, var(--navy) 55%, var(--navy-deep) 100%);
-    background-attachment:fixed;
-    font-family:'DM Sans',sans-serif;color:var(--cream);
-    min-height:100vh;padding:40px 20px 64px;
-    -webkit-font-smoothing:antialiased;
-  }
-  body::before{
-    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-    background-image:linear-gradient(rgba(236,233,227,0.035) 1px,transparent 1px),
-                     linear-gradient(90deg,rgba(236,233,227,0.035) 1px,transparent 1px);
-    background-size:48px 48px;
-  }
-  .wrap{max-width:940px;margin:0 auto;position:relative;z-index:1;}
+  body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.5;padding:44px 20px 72px;}
+  .wrap{max-width:1000px;margin:0 auto;}
 
-  header{text-align:center;margin-bottom:30px;}
-  .eyebrow{
-    font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.28em;
-    text-transform:uppercase;color:var(--lavender);font-weight:500;margin-bottom:12px;
-  }
-  h1{font-size:34px;font-weight:700;letter-spacing:-0.02em;line-height:1.2;}
-  h1 span{color:var(--purple-light);}
-  .sub{
-    margin-top:12px;font-family:'DM Mono',monospace;font-size:13px;
-    color:rgba(236,233,227,0.62);letter-spacing:0.01em;line-height:1.6;max-width:640px;margin-left:auto;margin-right:auto;
-  }
-  .sub b{color:var(--sky);font-weight:500;} .sub i{color:var(--purple-light);font-style:normal;}
+  header{margin-bottom:26px;}
+  .eyebrow{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.24em;text-transform:uppercase;color:var(--purple);font-weight:500;margin-bottom:10px;}
+  h1{font-size:32px;font-weight:700;letter-spacing:-0.02em;line-height:1.15;}
+  h1 span{color:var(--purple);}
+  .sub{margin-top:12px;color:var(--muted);font-size:15px;max-width:660px;}
+  .sub b{color:var(--ink);font-weight:600;}
 
-  .panel{
-    background:rgba(13,20,48,0.82);border:1px solid rgba(236,233,227,0.09);
-    border-radius:16px;padding:22px 22px 24px;margin-bottom:20px;
-    box-shadow:inset 0 0 60px rgba(107,41,247,0.05);
-  }
-  .plabel{
-    font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
-    color:rgba(236,233,227,0.5);font-weight:500;margin-bottom:12px;
-  }
-  textarea{
-    width:100%;min-height:96px;resize:vertical;
-    background:rgba(10,19,48,0.9);border:1px solid rgba(183,138,255,0.28);border-radius:10px;
-    color:var(--cream);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.5;padding:14px 16px;
-    outline:none;transition:border-color .15s;
-  }
-  textarea:focus{border-color:var(--purple-light);}
-  textarea::placeholder{color:rgba(236,233,227,0.32);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;}
+  .lbl{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:12px;}
 
-  .controls{display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;}
-  .toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(236,233,227,0.8);cursor:pointer;user-select:none;}
-  .toggle input{width:36px;height:20px;-webkit-appearance:none;appearance:none;
-    background:rgba(236,233,227,0.16);border-radius:999px;position:relative;cursor:pointer;transition:background .15s;outline:none;}
+  textarea{width:100%;min-height:80px;resize:vertical;background:#fff;border:1px solid var(--line);border-radius:10px;
+    color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.5;padding:13px 15px;outline:none;transition:border-color .15s;}
+  textarea:focus{border-color:var(--purple);}
+  textarea::placeholder{color:#b3b5c6;}
+  .controls{display:flex;align-items:center;gap:14px;margin-top:13px;flex-wrap:wrap;}
+  .toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);cursor:pointer;user-select:none;}
+  .toggle input{width:36px;height:20px;-webkit-appearance:none;appearance:none;background:#d9dae6;border-radius:999px;position:relative;cursor:pointer;transition:background .15s;outline:none;flex:none;}
   .toggle input:checked{background:var(--purple);}
-  .toggle input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .toggle input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.2);}
   .toggle input:checked::after{transform:translateX(16px);}
-  .toggle .hint{font-family:'DM Mono',monospace;font-size:10.5px;color:rgba(236,233,227,0.45);letter-spacing:0.04em;}
-  .samples{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;}
-  .samples button{
-    font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:0.06em;
-    background:rgba(107,41,247,0.14);border:1px solid rgba(183,138,255,0.35);color:var(--purple-light);
-    border-radius:999px;padding:5px 11px;cursor:pointer;transition:background .15s;
-  }
-  .samples button:hover{background:rgba(107,41,247,0.28);}
+  .toggle .hint{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.03em;}
+  .samples{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto;}
+  .samples button{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:0.04em;background:var(--purple-soft);border:1px solid #dcccff;color:var(--purple);border-radius:999px;padding:5px 11px;cursor:pointer;transition:background .15s;}
+  .samples button:hover{background:#e7dcff;}
 
-  /* result */
-  .result{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;}
-  @media(max-width:680px){.result{grid-template-columns:1fr;}}
-  .rcard{background:rgba(10,19,48,0.7);border:1px solid rgba(236,233,227,0.09);border-radius:12px;padding:16px 18px;}
-  .rcard .k{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(236,233,227,0.45);margin-bottom:8px;}
-  .tierbadge{display:inline-flex;align-items:center;gap:9px;font-size:22px;font-weight:700;letter-spacing:-0.01em;}
-  .dot{width:12px;height:12px;border-radius:50%;box-shadow:0 0 14px currentColor;}
-  .t-SIMPLE{color:var(--mint);} .t-MEDIUM{color:var(--amber);}
-  .t-COMPLEX{color:#ff8f8f;} .t-REASONING{color:var(--purple-light);}
-  .modelid{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:#fff;word-break:break-all;line-height:1.35;}
-  .modeltag{display:inline-block;margin-top:9px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;}
-  .tag-free{color:#0d1430;background:var(--mint);} .tag-paid{color:#0d1430;background:var(--amber);} .tag-agentic{color:#e9dcff;background:rgba(107,41,247,0.5);border:1px solid var(--purple-light);}
+  /* ---- FLOW GRAPH ---- */
+  .graph{display:grid;grid-template-columns:auto 40px 1.5fr 40px 1fr;align-items:center;gap:0;}
+  @media(max-width:760px){.graph{grid-template-columns:1fr;gap:8px;}.arrow{transform:rotate(90deg);height:32px;}}
+  .node{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;text-align:center;}
+  .node .nt{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .node.prompt .val{font-size:12px;color:var(--ink);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'DM Mono',monospace;}
+  .arrow{display:flex;align-items:center;justify-content:center;color:#c9cbd8;font-size:20px;transition:color .2s;}
+  .arrow.live{color:var(--purple);}
 
-  .meterrow{margin-top:14px;}
-  .meterrow .k{display:flex;justify-content:space-between;}
-  .meter{height:7px;border-radius:999px;background:rgba(236,233,227,0.1);overflow:hidden;margin-top:2px;}
-  .meter i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--purple),var(--purple-light));transition:width .2s;}
-  .ambiguous{color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;}
-  .signals{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;}
-  .signals span{font-family:'DM Mono',monospace;font-size:10.5px;color:rgba(236,233,227,0.72);background:rgba(168,232,247,0.09);border:1px solid rgba(168,232,247,0.22);border-radius:6px;padding:3px 8px;}
+  /* switchboard node = 4 tier lanes */
+  .switchboard{border:1.5px solid var(--purple);border-radius:12px;padding:12px;background:linear-gradient(180deg,#fff,#faf7ff);}
+  .switchboard .nt{color:var(--purple);text-align:center;margin-bottom:10px;}
+  .lanes{display:flex;flex-direction:column;gap:6px;}
+  .lane{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;opacity:.5;transition:.18s;}
+  .lane .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+  .lane .name{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.06em;}
+  .lane .mdl{margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lane.active{opacity:1;border-width:1.5px;box-shadow:0 2px 12px rgba(107,41,247,.1);}
+  .lane.SIMPLE .dot{background:var(--simple);} .lane.SIMPLE.active{border-color:var(--simple);}
+  .lane.MEDIUM .dot{background:var(--medium);} .lane.MEDIUM.active{border-color:var(--medium);}
+  .lane.COMPLEX .dot{background:var(--complex);} .lane.COMPLEX.active{border-color:var(--complex);}
+  .lane.REASONING .dot{background:var(--reasoning);} .lane.REASONING.active{border-color:var(--reasoning);}
+  .lane.active .name{color:var(--ink);}
 
-  /* model table */
+  .openrouter{background:#0f1120;border-color:#0f1120;}
+  .openrouter .nt{color:#9fa2c4;}
+  .openrouter .val{font-family:'DM Mono',monospace;font-size:13px;color:#fff;font-weight:500;}
+  .openrouter .callout{margin-top:6px;font-family:'DM Mono',monospace;font-size:9.5px;color:#6f72a0;letter-spacing:.04em;}
+
+  .modelnode .val{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--ink);word-break:break-all;line-height:1.35;}
+  .tag{display:inline-block;margin-top:8px;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;}
+  .tag.free{color:#0b6b2f;background:#dcfce7;} .tag.paid{color:#8a4b00;background:#ffedd5;} .tag.ag{color:#fff;background:var(--purple);}
+
+  .metarow{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;align-items:center;}
+  .meta{display:flex;flex-direction:column;gap:3px;}
+  .meta .k{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+  .meta .v{font-size:14px;font-weight:600;}
+  .conf .bar{width:120px;height:6px;background:#eceaf4;border-radius:999px;overflow:hidden;margin-top:4px;}
+  .conf .bar i{display:block;height:100%;background:var(--purple);border-radius:999px;transition:width .2s;}
+  .amb{font-family:'DM Mono',monospace;font-size:11px;color:var(--medium);}
+  .signals{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;max-width:420px;justify-content:flex-end;}
+  .signals span{font-family:'DM Mono',monospace;font-size:10px;color:var(--sky);background:#e6fafd;border:1px solid #c5f0f5;border-radius:6px;padding:3px 7px;}
+
+  /* editable table */
+  .tabhead{display:flex;gap:8px;margin-bottom:12px;}
+  .tabhead button{flex:1;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;background:#fff;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:8px;cursor:pointer;transition:.15s;}
+  .tabhead button.on{background:var(--purple-soft);border-color:var(--purple);color:var(--purple);}
   table{width:100%;border-collapse:separate;border-spacing:0 6px;}
-  th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(236,233,227,0.45);font-weight:500;text-align:left;padding:2px 10px 6px;}
-  td{background:rgba(10,19,48,0.7);padding:8px 10px;font-size:13px;vertical-align:middle;border-top:1px solid rgba(236,233,227,0.06);border-bottom:1px solid rgba(236,233,227,0.06);}
-  td:first-child{border-radius:9px 0 0 9px;border-left:3px solid transparent;font-family:'DM Mono',monospace;font-weight:500;font-size:12px;}
+  th{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:left;padding:2px 10px 4px;}
+  td{background:#fff;padding:7px 10px;font-size:13px;vertical-align:middle;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  td:first-child{border-radius:9px 0 0 9px;border-left:3px solid transparent;font-family:'DM Mono',monospace;font-weight:600;font-size:12px;}
   td:last-child{border-radius:0 9px 9px 0;}
-  tr.SIMPLE td:first-child{border-left-color:var(--mint);color:var(--mint);}
-  tr.MEDIUM td:first-child{border-left-color:var(--amber);color:var(--amber);}
-  tr.COMPLEX td:first-child{border-left-color:#ff8f8f;color:#ff8f8f;}
-  tr.REASONING td:first-child{border-left-color:var(--purple-light);color:var(--purple-light);}
-  td input{width:100%;background:rgba(13,20,48,0.9);border:1px solid rgba(236,233,227,0.14);border-radius:7px;color:var(--cream);font-family:'DM Mono',monospace;font-size:12.5px;padding:6px 9px;outline:none;}
-  td input:focus{border-color:var(--purple-light);}
-  .tabhead{display:flex;gap:10px;margin-bottom:14px;}
-  .tabhead button{flex:1;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;background:transparent;border:1px solid rgba(236,233,227,0.14);color:rgba(236,233,227,0.55);border-radius:9px;padding:9px;cursor:pointer;transition:.15s;}
-  .tabhead button.on{background:rgba(107,41,247,0.22);border-color:var(--purple-light);color:var(--purple-light);}
+  tr.SIMPLE td:first-child{border-left-color:var(--simple);color:var(--simple);}
+  tr.MEDIUM td:first-child{border-left-color:var(--medium);color:var(--medium);}
+  tr.COMPLEX td:first-child{border-left-color:var(--complex);color:var(--complex);}
+  tr.REASONING td:first-child{border-left-color:var(--reasoning);color:var(--reasoning);}
+  td input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:7px;color:var(--ink);font-family:'DM Mono',monospace;font-size:12.5px;padding:6px 9px;outline:none;}
+  td input:focus{border-color:var(--purple);}
 
-  .note{font-family:'DM Mono',monospace;font-size:11.5px;color:rgba(236,233,227,0.5);line-height:1.6;margin-top:14px;}
-  .note b{color:var(--sky);font-weight:500;}
-  footer{text-align:center;margin-top:30px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(236,233,227,0.4);letter-spacing:0.04em;}
-  footer a{color:var(--purple-light);text-decoration:none;}
+  .note{font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:12px;}
+  .note b{color:var(--ink);}
+  code.snip{display:block;background:#0f1120;color:#e6e6ee;font-family:'DM Mono',monospace;font-size:12px;border-radius:10px;padding:14px 16px;margin-top:12px;white-space:pre;overflow-x:auto;line-height:1.6;}
+  code.snip .c{color:#6f72a0;} code.snip .s{color:#b78aff;}
+  footer{text-align:center;margin-top:28px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.03em;}
+  footer a{color:var(--purple);text-decoration:none;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <div class="eyebrow">Bowtie Funnel · GTM tools · LLM routing</div>
-    <h1>LLM Switchboard — <span>route every prompt to the right model</span></h1>
-    <p class="sub">Classifies a prompt <b>locally in &lt;1ms</b> across heuristic dimensions, buckets it into a tier, and returns the model you mapped to it. <i>Free open-weight for the workflow miles, frontier models for the thinking.</i> No API call — it just picks; you make the call.</p>
+    <h1>LLM Switchboard <span>→ OpenRouter</span></h1>
+    <p class="sub">A local router that sits <b>before OpenRouter</b>. It classifies a prompt in &lt;1ms, picks the model, and hands the ID to your OpenRouter call — <b>free open-weight for workflow, frontier for thinking</b>. It never makes a network call; it just decides.</p>
   </header>
 
-  <div class="panel">
-    <div class="plabel">Prompt</div>
+  <div class="card">
+    <div class="lbl">Prompt</div>
     <textarea id="prompt" placeholder="Paste a prompt… e.g. 'Prove that the sum of two even numbers is even, step by step.'"></textarea>
     <div class="controls">
       <label class="toggle"><input type="checkbox" id="agentic"><span>Agentic mode</span><span class="hint">force tool-loop table</span></label>
@@ -135,196 +127,124 @@
     </div>
   </div>
 
-  <div class="panel">
-    <div class="plabel">Routed to</div>
-    <div class="result">
-      <div class="rcard">
-        <div class="k">Tier</div>
-        <div class="tierbadge" id="tierBadge"><span class="dot"></span><span id="tierName">—</span></div>
-        <div class="meterrow">
-          <div class="k"><span>Confidence</span><span id="confVal">—</span></div>
-          <div class="meter"><i id="confBar" style="width:0%"></i></div>
-          <div class="ambiguous" id="ambiguous" style="display:none">below threshold → ambiguous, fell to default tier</div>
-        </div>
-        <div class="signals" id="signals"></div>
+  <div class="card">
+    <div class="lbl">Flow — prompt → switchboard → OpenRouter → model</div>
+    <div class="graph">
+      <div class="node prompt"><div class="nt">Prompt</div><div class="val" id="gPrompt">—</div></div>
+      <div class="arrow" id="a1">▶</div>
+      <div class="switchboard">
+        <div class="nt">Switchboard · local &lt;1ms</div>
+        <div class="lanes" id="lanes"></div>
       </div>
-      <div class="rcard">
-        <div class="k">Model</div>
-        <div class="modelid" id="modelId">—</div>
-        <div id="modelTags"></div>
+      <div class="arrow" id="a2">▶</div>
+      <div class="node openrouter"><div class="nt">OpenRouter</div><div class="val">POST /chat</div><div class="callout" id="gTier">the paid call</div></div>
+    </div>
+    <div class="graph" style="grid-template-columns:1fr;margin-top:12px;">
+      <div class="node modelnode" style="text-align:left;">
+        <div class="nt">Model selected</div>
+        <div class="val" id="gModel">—</div>
+        <div id="gTags"></div>
       </div>
+    </div>
+
+    <div class="metarow">
+      <div class="meta conf"><span class="k">Confidence</span><span class="v" id="confV">—</span><div class="bar"><i id="confBar" style="width:0"></i></div></div>
+      <div class="meta"><span class="k">Tier</span><span class="v" id="tierV">—</span></div>
+      <div class="meta"><span class="k" id="ambK"></span><span class="amb" id="ambV"></span></div>
+      <div class="signals" id="signals"></div>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="plabel">Model table — edit freely</div>
+  <div class="card">
+    <div class="lbl">Model table — edit freely</div>
     <div class="tabhead">
       <button id="tabStd" class="on">Standard tiers</button>
       <button id="tabAg">Agentic tiers</button>
     </div>
-    <table>
-      <thead><tr><th style="width:120px">Tier</th><th>Model ID (OpenRouter slug)</th><th style="width:64px">Cost</th></tr></thead>
-      <tbody id="tblBody"></tbody>
-    </table>
-    <div class="note">
-      <b>How the split works:</b> short / structured prompts fall to the cheap tiers (SIMPLE·MEDIUM → free open-weight); reasoning, code, and long-context prompts climb to COMPLEX·REASONING → frontier. Flip <b>Agentic mode</b> — or let the classifier detect a multi-step tool prompt — and it swaps to the agentic table, where tool-loop reliability matters more than price.
-    </div>
+    <table><thead><tr><th style="width:120px">Tier</th><th>Model ID (OpenRouter slug)</th><th style="width:60px">Cost</th></tr></thead>
+      <tbody id="tblBody"></tbody></table>
+    <div class="note"><b>The split:</b> short / structured prompts fall to SIMPLE·MEDIUM → free open-weight; reasoning, code and analysis climb to COMPLEX·REASONING → frontier. Agentic mode (or auto-detected tool prompts) swaps to the agentic table, where tool-loop reliability beats price.</div>
+    <code class="snip"><span class="c">// same logic your agents run — the module this page imports</span>
+<span class="s">import</span> { route } <span class="s">from</span> "./btf-switchboard.js";
+<span class="s">const</span> { model, tier } = route(prompt);       <span class="c">// local, &lt;1ms</span>
+<span class="s">const</span> res = <span class="s">await</span> openrouter(model, prompt); <span class="c">// the paid call</span></code>
   </div>
 
-  <footer>
-    Heuristic port of the switchboard pattern · runs 100% in your browser · <a href="https://labs.bowtiefunnel.com/">labs.bowtiefunnel.com</a>
-  </footer>
+  <footer>Your own switchboard · runs 100% in-browser · shares <a href="./btf-switchboard.js">btf-switchboard.js</a> with your agents · <a href="https://labs.bowtiefunnel.com/">labs.bowtiefunnel.com</a></footer>
 </div>
 
-<script>
-// ponytail: trimmed English-only port of the switchboard heuristic — faithful in spirit
-// (dimensions + weights + tier boundaries), not a byte-exact clone of the npm package.
-const DIM = {
-  // reasoning = logic/proof/multi-step thinking → REASONING tier
-  reasoning: {w:0.20, kw:["prove","theorem","derive","step by step","chain of thought","formally","mathematical","proof","logically","reason through","think through","first principles","trade-off","edge case"]},
-  // code = literal code/syntax → COMPLEX
-  code:      {w:0.15, kw:["function","class","import ","def ","select ","async","await","const ","```","=>","refactor","stack trace","exception"]},
-  // technical + business-analysis vocab → COMPLEX (deep analysis, not trivial)
-  technical: {w:0.12, kw:["algorithm","optimize","architecture","distributed","kubernetes","microservice","database","infrastructure","analyze","analysis","variance","attribute","forecast","segment","cohort","driver","root cause","deep dive","pipeline","churn","attribution","strategy"]},
-  creative:  {w:0.05, kw:["story","poem","compose","brainstorm","creative","imagine","write a","draft a","post about","in your voice","founder-voice"]},
-  simple:    {w:0.06, kw:["what is","define","translate","hello","hi ","hey","yes or no","capital of","how old","who is","when was","thanks","summarize","reply to","assign","route the","one-line"]},
-  agentic:   {w:0.13, kw:["read file","read the","look at","check the","open the","edit ","modify","update the","write to","create file","execute","deploy","install","npm","pip","compile","after that","and also","once done","step 1","step 2","until it","keep trying","iterate","make sure","verify","debug","fix it","fix the","the repo"]},
-  imperative:{w:0.03, kw:["build","implement","design","develop","generate","configure","set up","migrate"]},
-  output:    {w:0.03, kw:["json","yaml","xml","table","csv","markdown","schema","format as","structured"]},
-  domain:    {w:0.04, kw:["quantum","fpga","vlsi","risc-v","asic","genomics","topological","homomorphic","zero-knowledge","lattice-based"]},
-};
-// boundaries tuned to this port's score scale (not the npm package's)
-const BOUND = { simpleMedium:-0.03, mediumComplex:0.08, complexReasoning:0.20 };
-const STEEP = 45, CONF_THRESH = 0.55, DEFAULT_TIER = "MEDIUM"; // ambiguous fallback (MEDIUM is still free in our table)
-const FORCE_COMPLEX_TOKENS = 100000;
+<script type="module">
+import { classify, route, DEFAULT_TABLES, isFree } from "./btf-switchboard.js";
 
-const TABLES = {
-  std: {
-    SIMPLE:    "google/gemma-3-27b-it:free",
-    MEDIUM:    "meta-llama/llama-3.3-70b-instruct:free",
-    COMPLEX:   "anthropic/claude-sonnet-4.6",
-    REASONING: "moonshotai/kimi-k3",
-  },
-  ag: {
-    SIMPLE:    "moonshotai/kimi-k2.5",
-    MEDIUM:    "anthropic/claude-haiku-4.5",
-    COMPLEX:   "moonshotai/kimi-k3",
-    REASONING: "anthropic/claude-opus-4.6",
-  },
-};
-const isFree = s => /:free\b/.test(s);
-
-function classify(text){
-  const t = text.toLowerCase();
-  const tokens = Math.ceil(text.length / 4);
-  const signals = [];
-  let score = 0;
-  for (const [name, d] of Object.entries(DIM)){
-    const hits = d.kw.filter(k => t.includes(k));
-    if (hits.length){
-      // saturating count → 0..1.5, weighted; reasoning/agentic push up, simple pushes down
-      const mag = Math.min(1.3, hits.length * 0.6);
-      const dir = (name === "simple") ? -1 : 1;
-      score += d.w * mag * dir;
-      signals.push(`${name} ×${hits.length}`);
-    }
-  }
-  // length nudges up (long, dense prompts are rarely trivial)
-  const lenBias = Math.min(0.08, tokens / 4000);
-  score += lenBias;
-  if (tokens > 40) signals.push(`${tokens} tokens`);
-
-  const agentic = DIM.agentic.kw.filter(k => t.includes(k)).length >= 2;
-
-  // score axis → tier
-  let tier;
-  if (score < BOUND.simpleMedium) tier = "SIMPLE";
-  else if (score < BOUND.mediumComplex) tier = "MEDIUM";
-  else if (score < BOUND.complexReasoning) tier = "COMPLEX";
-  else tier = "REASONING";
-
-  // confidence = distance from nearest boundary, sigmoid-calibrated
-  const bounds = [BOUND.simpleMedium, BOUND.mediumComplex, BOUND.complexReasoning];
-  const dist = Math.min(...bounds.map(b => Math.abs(score - b)));
-  const confidence = 1 / (1 + Math.exp(-STEEP * dist));
-  const ambiguous = confidence < CONF_THRESH;
-
-  return { tier, ambiguous, confidence, signals, tokens, agentic, score };
-}
-
-function route(){
-  const text = document.getElementById("prompt").value;
-  const forceAgentic = document.getElementById("agentic").checked;
-  const badge = document.getElementById("tierBadge");
-  const nameEl = document.getElementById("tierName");
-  const modelEl = document.getElementById("modelId");
-  const tagsEl = document.getElementById("modelTags");
-  const sigEl = document.getElementById("signals");
-  const ambEl = document.getElementById("ambiguous");
-
-  if (!text.trim()){
-    nameEl.textContent = "—"; modelEl.textContent = "—"; tagsEl.innerHTML = "";
-    sigEl.innerHTML = ""; ambEl.style.display = "none";
-    document.getElementById("confBar").style.width = "0%";
-    document.getElementById("confVal").textContent = "—";
-    badge.className = "tierbadge"; return;
-  }
-
-  const r = classify(text);
-  let tier = r.tier;
-  if (r.ambiguous) tier = DEFAULT_TIER;
-  if (r.tokens > FORCE_COMPLEX_TOKENS) tier = "COMPLEX";
-
-  const useAgentic = forceAgentic || r.agentic;
-  const table = useAgentic ? TABLES.ag : TABLES.std;
-  const model = table[tier];
-
-  nameEl.textContent = tier;
-  nameEl.className = "t-" + tier;
-  // dot inherits the tier color so its glow matches the label
-  badge.querySelector(".dot").style.color = getComputedStyle(nameEl).color;
-
-  modelEl.textContent = model;
-  tagsEl.innerHTML =
-    `<span class="modeltag ${isFree(model)?'tag-free':'tag-paid'}">${isFree(model)?'free':'paid'}</span>` +
-    (useAgentic ? ` <span class="modeltag tag-agentic">${forceAgentic?'agentic (forced)':'agentic (auto)'}</span>` : "");
-
-  const pct = Math.round(r.confidence * 100);
-  document.getElementById("confBar").style.width = pct + "%";
-  document.getElementById("confVal").textContent = pct + "%";
-  ambEl.style.display = r.ambiguous ? "block" : "none";
-  sigEl.innerHTML = r.signals.map(s => `<span>${s}</span>`).join("");
-}
-
-// ---- editable table rendering ----
+const TIERS = ["SIMPLE","MEDIUM","COMPLEX","REASONING"];
+// working copy of the tables the user can edit
+const TABLES = JSON.parse(JSON.stringify(DEFAULT_TABLES));
 let activeTab = "std";
-function renderTable(){
-  const body = document.getElementById("tblBody");
-  const table = TABLES[activeTab];
-  body.innerHTML = "";
-  for (const tier of ["SIMPLE","MEDIUM","COMPLEX","REASONING"]){
-    const tr = document.createElement("tr");
-    tr.className = tier;
-    tr.innerHTML =
-      `<td>${tier}</td>` +
-      `<td><input data-tier="${tier}" value="${table[tier]}"></td>` +
-      `<td>${isFree(table[tier])?'<span class="modeltag tag-free">free</span>':'<span class="modeltag tag-paid">paid</span>'}</td>`;
-    body.appendChild(tr);
+
+const $ = id => document.getElementById(id);
+
+function renderLanes(activeTier, useAg){
+  const table = useAg ? TABLES.ag : TABLES.std;
+  $("lanes").innerHTML = TIERS.map(t =>
+    `<div class="lane ${t} ${t===activeTier?'active':''}">
+       <span class="dot"></span><span class="name">${t}</span>
+       <span class="mdl">${table[t]}</span>
+     </div>`).join("");
+}
+
+function run(){
+  const text = $("prompt").value;
+  const forceAg = $("agentic").checked;
+  $("gPrompt").textContent = text.trim() ? text.slice(0,60) : "—";
+
+  if(!text.trim()){
+    renderLanes(null, forceAg);
+    $("gModel").textContent="—"; $("gTags").innerHTML="";
+    $("a1").classList.remove("live"); $("a2").classList.remove("live");
+    $("confV").textContent="—"; $("confBar").style.width="0"; $("tierV").textContent="—";
+    $("signals").innerHTML=""; $("ambK").textContent=""; $("ambV").textContent="";
+    $("gTier").textContent="the paid call";
+    return;
   }
-  body.querySelectorAll("input").forEach(inp => {
-    inp.addEventListener("input", e => {
-      TABLES[activeTab][e.target.dataset.tier] = e.target.value.trim();
-      renderTable(); route();
-      // keep focus after re-render
-      const again = document.querySelector(`input[data-tier="${e.target.dataset.tier}"]`);
-      if (again){ again.focus(); again.setSelectionRange(again.value.length, again.value.length); }
+
+  const r = route(text, { agentic: forceAg, tables: TABLES });
+
+  renderLanes(r.tier, r.useAgentic);
+  $("a1").classList.add("live"); $("a2").classList.add("live");
+  $("gModel").textContent = r.model;
+  $("gTags").innerHTML =
+    `<span class="tag ${isFree(r.model)?'free':'paid'}">${isFree(r.model)?'free':'paid'}</span>` +
+    (r.useAgentic ? ` <span class="tag ag">${forceAg?'agentic·forced':'agentic·auto'}</span>` : "");
+  $("gTier").textContent = r.tier + " tier";
+
+  const pct = Math.round(r.confidence*100);
+  $("confV").textContent = pct+"%"; $("confBar").style.width = pct+"%";
+  $("tierV").textContent = r.tier;
+  if(r.ambiguous){ $("ambK").textContent="Note"; $("ambV").textContent=`ambiguous → default ${r.tier}`; }
+  else { $("ambK").textContent=""; $("ambV").textContent=""; }
+  $("signals").innerHTML = r.signals.map(s=>`<span>${s}</span>`).join("");
+}
+
+// editable table
+function renderTable(){
+  const table = TABLES[activeTab];
+  $("tblBody").innerHTML = TIERS.map(t =>
+    `<tr class="${t}"><td>${t}</td><td><input data-t="${t}" value="${table[t]}"></td>
+     <td>${isFree(table[t])?'<span class="tag free">free</span>':'<span class="tag paid">paid</span>'}</td></tr>`).join("");
+  $("tblBody").querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("input", e=>{
+      TABLES[activeTab][e.target.dataset.t] = e.target.value.trim();
+      const t=e.target.dataset.t, pos=e.target.selectionStart;
+      renderTable(); run();
+      const again=document.querySelector(`input[data-t="${t}"]`);
+      if(again){ again.focus(); again.setSelectionRange(pos,pos); }
     });
   });
 }
-document.getElementById("tabStd").onclick = ()=>{activeTab="std";document.getElementById("tabStd").classList.add("on");document.getElementById("tabAg").classList.remove("on");renderTable();};
-document.getElementById("tabAg").onclick  = ()=>{activeTab="ag"; document.getElementById("tabAg").classList.add("on"); document.getElementById("tabStd").classList.remove("on");renderTable();};
+$("tabStd").onclick=()=>{activeTab="std";$("tabStd").classList.add("on");$("tabAg").classList.remove("on");renderTable();};
+$("tabAg").onclick =()=>{activeTab="ag"; $("tabAg").classList.add("on"); $("tabStd").classList.remove("on");renderTable();};
 
-// ---- samples ----
+// samples
 const SAMPLES = {
   "greeting":"hi there, thanks!",
   "route lead":"New inbound lead: assign to the right territory owner.",
@@ -333,18 +253,18 @@ const SAMPLES = {
   "prove":"Prove that the square root of 2 is irrational, step by step.",
   "agentic":"Read the repo, find the failing test, fix it, run npm test, and iterate until it passes.",
 };
-const sampsEl = document.getElementById("samples");
-for (const [label, txt] of Object.entries(SAMPLES)){
-  const b = document.createElement("button");
-  b.textContent = label;
-  b.onclick = ()=>{ document.getElementById("prompt").value = txt; route(); };
-  sampsEl.appendChild(b);
+$("samples").innerHTML="";
+for(const [label,txt] of Object.entries(SAMPLES)){
+  const b=document.createElement("button"); b.textContent=label;
+  b.onclick=()=>{ $("prompt").value=txt; run(); };
+  $("samples").appendChild(b);
 }
 
-document.getElementById("prompt").addEventListener("input", route);
-document.getElementById("agentic").addEventListener("change", route);
+$("prompt").addEventListener("input", run);
+$("agentic").addEventListener("change", run);
 renderTable();
-route();
+renderLanes(null, false);
+run();
 </script>
 </body>
 </html>
