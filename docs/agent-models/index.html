@@ -14,13 +14,15 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   body{
     background:#33312c;font-family:'DM Sans',sans-serif;
+    height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;
   }
-  /* horizontal scroller for the wide canvas; page scrolls vertically */
-  .frame{overflow-x:auto;padding:24px;}
+  .sitenav{flex:none;}
+  /* both-axis scroll pane; header row + Agent column freeze inside it */
+  .frame{flex:1;min-height:0;overflow:auto;padding:0;}
   .stage{
-    width:2260px;flex:none;
+    width:2260px;flex:none;margin:24px;
     background:radial-gradient(1800px 1000px at 50% -10%, #142052 0%, var(--navy) 55%, var(--navy-deep) 100%);
-    position:relative;overflow:hidden;padding:52px 56px 44px;
+    position:relative;padding:52px 56px 44px;
   }
   .stage::before{
     content:"";position:absolute;inset:0;
@@ -222,6 +224,12 @@
   .claim strong{color:var(--bpurple);}
   .brand{background:var(--bnavy);padding:9px 16px;border-radius:12px;}
 
+  /* freeze the header row + the Agent column while scrolling the pane */
+  .tbl thead th{position:sticky;top:0;z-index:3;}
+  .tbl tbody td:first-child:not([colspan]),
+  .tbl thead th:first-child{position:sticky;left:0;z-index:2;box-shadow:1px 0 0 var(--bline);}
+  .tbl thead th:first-child{z-index:4;}
+
   /* ---- shared labs site nav (always light, matches the canvas) ---- */
   :root{--surface:#ffffff;--ink:#161a22;--line:#dbe1ea;}
   .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
@@ -267,7 +275,7 @@
     <div class="sn-dd active">
       <button class="sn-ddbtn" aria-haspopup="true" aria-expanded="false">Agents</button>
       <div class="sn-menu">
-        <a class="sn-tab active" href="/model-switchboard/">Agent Models</a>
+        <a class="sn-tab active" href="/agent-models/">Agent Models</a>
       </div>
     </div>
   </div>
@@ -849,7 +857,6 @@
 
   <div class="foot">
     <div class="claim">One switchboard, both desks — <strong>the job shape picks the model,</strong> and nothing ships ungated.</div>
-    <div class="brand"><img src="mainLogo.png" alt="Bowtie Funnel"></div>
   </div>
 </div>
 </div>
