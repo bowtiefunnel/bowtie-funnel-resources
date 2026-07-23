@@ -130,6 +130,14 @@
 .sn-tab{font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:500;color:var(--ink);opacity:.6;text-decoration:none;padding:6px 12px;border-radius:6px;transition:opacity .12s,background .12s;}
 .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
 .sn-tab.active{opacity:1;color:#6B29F7;font-weight:700;}
+.sn-dd{position:relative;display:flex;align-items:center;}
+.sn-ddbtn{font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:500;color:var(--ink);opacity:.6;background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;transition:opacity .12s,background .12s;}
+.sn-ddbtn::after{content:"\25BE";font-size:9px;}
+.sn-ddbtn:hover,.sn-dd:focus-within .sn-ddbtn{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+.sn-dd.active .sn-ddbtn{opacity:1;color:#6B29F7;font-weight:700;}
+.sn-menu{position:absolute;top:100%;left:0;min-width:170px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.12);padding:6px;display:none;flex-direction:column;gap:2px;}
+.sn-dd:hover .sn-menu,.sn-dd:focus-within .sn-menu{display:flex;}
+@media(max-width:640px){.sn-dd{flex-direction:column;align-items:stretch;}.sn-menu{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 0 14px;min-width:0;}.sn-ddbtn{justify-content:flex-start;}.sn-ddbtn::after{display:none;}}
 @media(max-width:520px){.sn-brand img{height:26px;}.sn-tab{padding:6px 7px;font-size:12.5px;}.sn-cta{padding:6px 10px;font-size:12px;}}
 .sn-inner{position:relative;}
 .sn-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
@@ -154,6 +162,12 @@
     <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
     <a class="sn-tab active" href="/tools/">Tools</a>
     <a class="sn-tab" href="/agent-skills/">Agent Skills</a>
+    <div class="sn-dd">
+      <button class="sn-ddbtn" aria-haspopup="true" aria-expanded="false">Agents</button>
+      <div class="sn-menu">
+        <a class="sn-tab" href="/model-switchboard/">Agent Models</a>
+      </div>
+    </div>
   </div>
   <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
   <button class="sn-burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
