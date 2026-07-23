@@ -12,10 +12,13 @@
     --mint:#86efac; --lavender:#d4b3ff;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
   body{
-    background:#33312c;font-family:'DM Sans',sans-serif;
+    background:#33312c;font-family:'DM Sans',sans-serif;overflow:hidden;
+  }
+  .frame{
+    width:100%;height:100%;overflow:auto;padding:24px;
     display:flex;align-items:flex-start;justify-content:safe center;
-    min-height:100vh;padding:24px;
   }
   .stage{
     width:2260px;flex:none;
@@ -159,6 +162,7 @@
   /* ===== site-v2 light / brand theme (white background) — overrides the dark theme above ===== */
   :root{--bnavy:#04246b;--bpurple:#6B29F7;--bcyan:#17b5e7;--bgreen:#0f9d6b;--bgray:#6b6760;--bpaper:#faf9f7;--bline:#ece9e3;}
   body{background:var(--bpaper);}
+  .frame{background:var(--bpaper);}
   .stage{background:#fff;border:1px solid var(--bline);border-radius:22px;box-shadow:0 20px 60px rgba(4,36,107,0.07);}
   .stage::before{display:none;}
   .eyebrow{color:var(--bpurple);}
@@ -223,6 +227,7 @@
 </style>
 </head>
 <body>
+<div class="frame">
 <div class="stage">
   <div class="head">
     <div class="eyebrow">AI agents · GTM · the model switchboard</div>
@@ -799,6 +804,7 @@
     <div class="claim">One switchboard, both desks — <strong>the job shape picks the model,</strong> and nothing ships ungated.</div>
     <div class="brand"><img src="mainLogo.png" alt="Bowtie Funnel"></div>
   </div>
+</div>
 </div>
 </body>
 </html>
