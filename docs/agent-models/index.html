@@ -224,6 +224,7 @@
   .claim strong{color:var(--bpurple);}
   .brand{background:var(--bnavy);padding:9px 16px;border-radius:12px;}
 
+  .tbl-wrap{display:contents;} /* desktop: no box, tables live directly in the pane */
   /* freeze the header row + the Agent column while scrolling the pane */
   .tbl thead th{position:sticky;top:0;z-index:3;}
   .tbl tbody td:first-child:not([colspan]),
@@ -260,6 +261,31 @@
     .sn-dd{flex-direction:column;align-items:stretch;}
     .sn-menu{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 0 14px;min-width:0;}
     .sn-ddbtn{justify-content:flex-start;}.sn-ddbtn::after{display:none;}
+  }
+
+  /* ---- mobile: reflow the intro, scroll each table on its own ---- */
+  @media(max-width:768px){
+    body{height:auto;min-height:100dvh;display:block;overflow:visible;}
+    .frame{flex:none;overflow:visible;padding:0;}
+    .stage{width:100%;min-width:0;margin:0;border-radius:0;border:none;box-shadow:none;padding:24px 12px 32px;}
+    .head{text-align:left;}
+    .head h1{font-size:22px;}
+    .eyebrow{font-size:11px;letter-spacing:0.16em;}
+    .subnote{font-size:12px;max-width:none;}
+    .switch{grid-template-columns:1fr;gap:10px;margin-bottom:12px;}
+    .sw{padding:13px 15px;}
+    .flip{grid-template-columns:1fr;gap:10px;margin-bottom:16px;}
+    .subhead{margin:24px 0 12px;padding-top:20px;}
+    .subhead h2{font-size:18px;}
+    .subhead .kicker{font-size:11px;}
+    /* each table becomes its own horizontal scroller */
+    .tbl-wrap{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--bline);border-radius:12px;}
+    table.tbl{min-width:880px;}
+    /* drop the vertical header freeze on mobile; keep the Agent column frozen */
+    .tbl thead th{position:static;}
+    .tbl thead th:first-child{position:sticky;left:0;z-index:4;}
+    .foot{margin-top:20px;}
+    .claim{font-size:14px;}
   }
 </style>
 </head>
@@ -343,6 +369,7 @@
     </div>
   </div>
 
+  <div class="tbl-wrap">
   <table class="tbl">
     <colgroup>
       <col style="width:9.5%"><col style="width:11%"><col style="width:15.5%">
@@ -636,6 +663,7 @@
 
     </tbody>
   </table>
+  </div>
 
   <div class="fnote">
     <b>Reading a row:</b> the <i>trigger</i> wakes the agent → the <i>first mile</i> turns trigger + intent into a structured problem → the <i>middle mile</i> computes the trustworthy answer in code/rules → the <i>last mile</i> narrates it. The section badge shows each tier's real split — the neural miles shrink as jobs get more structured, and the switchboard drops the model tier with them. Where a neural mile reads <i>"none"</i>, the trigger arrived already structured or the job is a pure sync with nothing to say — that's the discipline, not a gap.
@@ -665,6 +693,7 @@
     </div>
   </div>
 
+  <div class="tbl-wrap">
   <table class="tbl">
     <colgroup>
       <col style="width:9.5%"><col style="width:11%"><col style="width:15.5%">
@@ -850,6 +879,7 @@
 
     </tbody>
   </table>
+  </div>
 
   <div class="fnote">
     <b>Reading a row:</b> the <i>trigger</i> wakes the agent → the <i>first mile</i> frames the work (standing briefs and structured triggers shrink it to nothing) → the <i>middle mile</i> retrieves, filters, scores, and holds the publish rails → the <i>last mile</i> is the draft. Rows marked <i>"Big"</i> are agents whose deliverable is the language itself — there the last mile carries the value and the switchboard routes up to a stronger writing model. <b>The one neurosymbolic exception</b> is paid ads — it owns a measurable ROAS loop end-to-end, though its budget rails still gate the spend. The constant across both desks: <b>every external action (post, publish, PR, send, spend) stops at a human gate.</b>
