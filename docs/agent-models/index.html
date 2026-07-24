@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Model Switchboard — 47 GTM agents routed to the right model — Bowtie Funnel</title>
+<title>The Model Switchboard — 48 GTM agents routed to the right model — Bowtie Funnel</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -331,7 +331,7 @@
     <h1>The Model Switchboard — <span>every GTM agent routed to the right model, mile by mile</span></h1>
   </div>
   <div class="subnote">
-    Every agent's neural miles run through a <i>model switchboard</i>: a classifier scores the job shape — how structured the trigger is, whether the answer is reasoning or language — and routes that mile to the <b>tier-right model</b>. A structured trigger shrinks the first mile toward zero and drops the tier; schedule-fired framing or a causal loop lifts it. The <b>bold pick</b> in every row below is the switchboard's call. Two desks — <b>30 RevOps</b> agents and <b>17 marketing</b> agents — routed by the same rule.
+    Every agent's neural miles run through a <i>model switchboard</i>: a classifier scores the job shape — how structured the trigger is, whether the answer is reasoning or language — and routes that mile to the <b>tier-right model</b>. A structured trigger shrinks the first mile toward zero and drops the tier; schedule-fired framing or a causal loop lifts it. The <b>bold pick</b> in every row below is the switchboard's call. Two desks — <b>30 RevOps</b> agents and <b>18 marketing</b> agents — routed by the same rule.
   </div>
 
   <!-- switchboard routing legend -->
@@ -697,7 +697,7 @@
   <!-- ============================= MARKETING ============================= -->
   <div class="subhead">
     <div class="kicker">Desk 2 · Marketing</div>
-    <h2>17 marketing agents — <span>what fires them, and how the work really splits</span></h2>
+    <h2>18 marketing agents — <span>what fires them, and how the work really splits</span></h2>
   </div>
   <div class="subnote" style="text-align:left;margin-left:0;">
     The split is a <i>dial</i>, and marketing turns it differently: when the deliverable <i>is language</i>, the <b>last mile grows</b> — the draft is the product, and the switchboard routes it up a tier. Only <b>paid ads</b> closes its own loop and earns the neurosymbolic tier; for every other agent <b>a human closes the loop</b>, and every external action — post, publish, PR, send, spend — <b>stops at a human gate</b>.
@@ -781,6 +781,15 @@
 
       <!-- GUARDED DRAFTING -->
       <tr class="secrow sec-guard"><td colspan="7"><span class="sectitle">Guarded drafting — the deliverable is language, the last mile grows<span class="split">≈5 - 45 - 50 · gated</span></span></td></tr>
+      <tr class="r-guard">
+        <td><span class="agent">Battlecard builder</span><span class="intent">Generate 9-section competitive battlecards + cited Slack Q&amp;A (Klue / Crayon alternative)</span></td>
+        <td><span class="trig">@bot competitor mention in Slack</span><span class="ttype tt-event">Event</span></td>
+        <td class="m-neural">Detect the competitor, fuzzy-match the registry, route — build a new card or answer from the existing one</td>
+        <td class="m-det">5 parallel research streams (Perplexity + Jina scrape) → 5 parallel Claude generators (overview, positioning, features, SWOT, attack surfaces) → merge → Notion + Data Table; review gate</td>
+        <td class="m-neural"><span class="big">Big:</span> the 9-section battlecard + cited Slack answers</td>
+        <td class="tools">Slack, Perplexity, Jina AI, Notion, n8n Data Table</td>
+        <td class="models"><span class="mr">Claude Sonnet 5</span><span class="sep">·</span><span class="mb">GPT-5</span><span class="sep">·</span><span class="mb">Gemini 3 Pro</span><span class="sep">·</span><span class="mb">Claude Haiku 4.5</span></td>
+      </tr>
       <tr class="r-guard">
         <td><span class="agent">Writer</span><span class="intent">Draft long-form articles inside brand &amp; SEO guardrails</span></td>
         <td><span class="trig">Weekly cron / keyword handoff from SEO</span><span class="ttype tt-sched">Schedule</span></td>
