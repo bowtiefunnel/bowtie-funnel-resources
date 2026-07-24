@@ -300,7 +300,7 @@
   .sn-dd:hover .sn-dd-caret,.sn-dd:focus-within .sn-dd-caret{transform:rotate(180deg);}
   .sn-dd-menu{position:absolute;top:calc(100% + 4px);left:0;min-width:170px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 24px rgba(0,0,0,.10);padding:6px;display:none;flex-direction:column;gap:2px;z-index:60;}
   .sn-dd:hover>.sn-dd-menu,.sn-dd:focus-within>.sn-dd-menu{display:flex;}
-  @media(max-width:640px){.sn-right .sn-dd{display:block;}.sn-right .sn-dd-menu{position:static;display:flex;box-shadow:none;border:none;background:none;padding:2px 0 2px 12px;min-width:0;}.sn-dd-toggle{padding:11px 12px;font-size:15px;}}
+  @media(max-width:640px){.sn-right .sn-dd{display:block;width:100%;}.sn-right .sn-dd-toggle{display:flex;width:100%;justify-content:flex-start;padding:11px 12px;font-size:15px;}.sn-right .sn-dd-menu{position:static;display:flex;box-shadow:none;border:none;background:none;padding:0 0 0 12px;min-width:0;}}
 </style>
 </head>
 <body>
