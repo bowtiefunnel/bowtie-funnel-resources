@@ -24,7 +24,6 @@
   /* ---- shared site nav ---- */
   .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
   .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
-  .sn-left{display:flex;align-items:center;gap:9px;}
   .sn-brand{display:flex;align-items:center;text-decoration:none;}
   .sn-labs{font-family:'Roboto',system-ui,sans-serif;font-weight:700;font-size:15px;color:#6B29F7;text-decoration:none;letter-spacing:-.01em;margin-left:2px;}
   .sn-brand img{height:30px;width:auto;}
@@ -105,13 +104,11 @@
 <body>
 
 <nav class="sitenav"><div class="sn-inner">
-  <div class="sn-left">
-    <a class="sn-brand" href="https://bowtiefunnel.com/" aria-label="Bowtie Funnel">
-      <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
-      <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
-    </a>
-    <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
-  </div>
+  <a class="sn-brand" href="https://bowtiefunnel.com/" aria-label="Bowtie Funnel">
+    <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
+    <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
+  </a>
+  <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
   <div class="sn-right">
     <a class="sn-tab" href="/#skills">Skills</a>
     <a class="sn-tab" href="/tools/">Tools</a>
