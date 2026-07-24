@@ -8,6 +8,42 @@ Reusable skills and tools for AI coding agents. One folder per skill under
 
 ## Skills
 
+### [`excalidraw`](skills/excalidraw/)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-6b46c1.svg)
+
+Draw and refine real diagrams on a live Excalidraw canvas you can watch in the
+browser — architecture, flows, sequences — then export `.excalidraw` + PNG/SVG.
+
+Drives a local canvas server over plain `curl`/CLI by default (no MCP required),
+or the Excalidraw MCP tools if they're loaded — same server either way. The
+agent creates elements, screenshots its own work, and fixes truncation, overlap,
+and arrow tangles before calling it done.
+
+**Brand-first:** its very first step asks you for your brand (stroke/accent
+colors, font) and bakes that recipe into every element at creation — so diagrams
+come out on-brand, not fixed up after. Ships a worked example recipe you copy and
+swap values on. Say "default" for a clean neutral style.
+
+Needs the open-source canvas server (`yctimlin/mcp_excalidraw`) running on
+`:3000` — one-time setup is in the skill's Step 0.
+
+**Install:**
+
+```bash
+# personal (all projects)
+cp -r skills/excalidraw ~/.claude/skills/
+
+# or project-scoped
+cp -r skills/excalidraw /path/to/project/.claude/skills/
+```
+
+Invoke it with `/excalidraw`, or just describe the diagram:
+
+> "draw the lead-intake flow as an architecture diagram"
+> "turn this Mermaid into an Excalidraw diagram"
+
 ### [`pick-agent-pattern`](skills/pick-agent-pattern/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)

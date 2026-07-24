@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>excalidraw — Bowtie Funnel Resources</title>
+<meta name="description" content="A Claude Code skill that draws and refines real diagrams on a live Excalidraw canvas — architecture, flows, sequences, Mermaid conversion — over plain curl/CLI. Asks for your brand first and bakes it into every element.">
+<style>
+  :root {
+    --paper: #eef1f6; --surface: #ffffff; --ink: #161a22; --muted: #5b6472;
+    --line: #dbe1ea; --accent: #2f6fce; --accent-soft: #e4edfb; --good: #2f8f5b; --warn: #9a6b1a;
+    --radius: 10px;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --measure: 66ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #0e1116; --surface: #161b23; --ink: #e7ebf1; --muted: #98a2b1;
+      --line: #242c37; --accent: #5a9cf0; --accent-soft: #17263c; --good: #4bb37c; --warn: #c79a4e; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;position:relative;}
+  .sn-brand{display:flex;align-items:center;text-decoration:none;}
+  .sn-labs{font-family:'Roboto',system-ui,sans-serif;font-weight:700;font-size:15px;color:#6B29F7;text-decoration:none;letter-spacing:-.01em;margin-left:2px;}
+  .sn-brand img{height:30px;width:auto;}
+  .sn-brand .sn-logo-dark{display:none;}
+  @media(prefers-color-scheme:dark){.sn-brand .sn-logo-light{display:none;}.sn-brand .sn-logo-dark{display:block;}}
+  :root[data-theme="light"] .sn-brand .sn-logo-light{display:block;} :root[data-theme="light"] .sn-brand .sn-logo-dark{display:none;}
+  :root[data-theme="dark"] .sn-brand .sn-logo-light{display:none;} :root[data-theme="dark"] .sn-brand .sn-logo-dark{display:block;}
+  .sn-cta{background:#6B29F7;color:#fff;font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:700;text-decoration:none;padding:7px 16px;border-radius:6px;white-space:nowrap;transition:background .2s;}
+  .sn-cta:hover{background:#5a20e0;}
+  .sn-tab{font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:500;color:var(--ink);opacity:.6;text-decoration:none;padding:6px 12px;border-radius:6px;transition:opacity .12s,background .12s;}
+  .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
+  .sn-tab.active{opacity:1;color:#6B29F7;font-weight:700;}
+  @media(max-width:520px){.sn-brand img{height:26px;}.sn-tab{padding:6px 7px;font-size:12.5px;}.sn-cta{padding:6px 10px;font-size:12px;}}
+  .sn-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+  .sn-burger{display:none;background:none;border:none;cursor:pointer;font-size:22px;line-height:1;color:var(--ink);padding:4px 8px;margin-left:auto;}
+  @media(max-width:640px){.sn-burger{display:block;margin-left:6px;}.sn-right{position:absolute;top:100%;right:0;left:0;flex-direction:column;align-items:stretch;gap:4px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 10px 24px rgba(0,0,0,.10);padding:10px;display:none;margin-left:0;}.sn-right.sn-open{display:flex;}.sn-right .sn-tab,.sn-right .sn-labs{padding:11px 12px;font-size:15px;}.sn-cta{margin-left:auto;}}
+
+  .wrap { max-width: 940px; margin: 0 auto; padding: clamp(28px, 6vw, 64px) clamp(20px, 5vw, 40px) 80px; }
+  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 18px; }
+  .eyebrow a{color:var(--muted);text-decoration:none;} .eyebrow a:hover{color:var(--accent);}
+  .eyebrow .sep { color: var(--muted); margin: 0 8px; }
+  h1 { font-family: var(--mono); font-size: clamp(34px, 6.5vw, 58px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.02; margin: 0 0 20px; text-wrap: balance; }
+  h1 .slash { color: var(--accent); }
+  .lede { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); max-width: var(--measure); margin: 0 0 12px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .lede a { color: var(--accent); text-decoration: none; } .lede a:hover { text-decoration: underline; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 5px 11px; border: 1px solid var(--line); border-radius: 100px; color: var(--muted); background: var(--surface); }
+  .chip.mit { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
+
+  section { margin-top: clamp(48px, 8vw, 80px); }
+  h2 { font-family: var(--mono); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .prose { max-width: var(--measure); }
+  .prose p { color: var(--muted); }
+  .prose code, .conv-note code { font-family: var(--mono); color: var(--accent); font-size: 13px; }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 680px) { .cards { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 24px; }
+  .card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: inline-block; padding: 4px 10px; background: var(--accent-soft); border-radius: 6px; margin-bottom: 14px; }
+  .card h3 { font-size: 18px; margin: 0 0 8px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .card code { font-family: var(--mono); color: var(--accent); }
+
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 8px; }
+  @media (max-width: 680px) { .flow { grid-template-columns: 1fr 1fr; } }
+  .step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 16px 18px; }
+  .step .n { font-family: var(--mono); font-size: 12px; color: var(--accent); display: block; margin-bottom: 8px; }
+  .step p { margin: 0; font-size: 14px; color: var(--muted); }
+  .step strong { color: var(--ink); font-weight: 600; }
+
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 460px; background: var(--surface); }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  td code { font-family: var(--mono); color: var(--accent); font-size: 13px; }
+  td.role { color: var(--muted); }
+
+  pre.code { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.7; margin: 0 0 16px; color: var(--ink); }
+  pre.code .c { color: var(--muted); }
+  pre.code .p { color: var(--accent); }
+  .use-note { color: var(--muted); margin: 16px 0 10px; }
+
+  footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
+  footer a { color: var(--accent); text-decoration: none; }
+  a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="sitenav"><div class="sn-inner">
+  <a class="sn-brand" href="https://bowtiefunnel.com/" aria-label="Bowtie Funnel">
+    <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
+    <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
+  </a>
+  <div class="sn-right">
+    <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
+    <a class="sn-tab" href="/tools/">Tools</a>
+    <a class="sn-tab" href="/agent-skills/">Agent Skills</a>
+  </div>
+  <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
+  <button class="sn-burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+</div></nav>
+
+<div class="wrap">
+  <p class="eyebrow"><a href="/#skills">Skills</a> <span class="sep">/</span> excalidraw</p>
+  <h1><span class="slash">/</span>excalidraw</h1>
+  <p class="lede">Diagrams an AI agent can actually see. It draws on a live Excalidraw canvas you watch in the browser, screenshots its own work, and fixes truncation, overlap, and tangled arrows before it calls the diagram done.</p>
+  <p class="lede"><strong>Architecture, flows, sequences — or a Mermaid diagram converted in one call.</strong> Exports editable <code>.excalidraw</code> plus a shareable PNG/SVG.</p>
+
+  <div class="meta">
+    <span class="chip mit" tabindex="0">MIT</span>
+    <span class="chip" tabindex="0">Claude&nbsp;Code skill</span>
+    <span class="chip" tabindex="0">CLI-first</span>
+    <span class="chip" tabindex="0">brand-first</span>
+  </div>
+
+  <section aria-label="How it works">
+    <h2>The loop that makes it work</h2>
+    <div class="flow">
+      <div class="step"><span class="n">01</span><p><strong>Ask the brand.</strong> First thing it does — your stroke/accent colors and font, or "default."</p></div>
+      <div class="step"><span class="n">02</span><p><strong>Draw a batch.</strong> Shapes and arrows in one call, brand baked in at creation.</p></div>
+      <div class="step"><span class="n">03</span><p><strong>Screenshot &amp; check.</strong> It reads the rendered canvas for truncation, overlap, arrow crossings.</p></div>
+      <div class="step"><span class="n">04</span><p><strong>Fix, then export.</strong> Repairs issues, re-checks, then saves <code>.excalidraw</code> + PNG.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Two ways to drive it</h2>
+    <div class="cards">
+      <div class="card">
+        <span class="tag">default</span>
+        <h3>Plain CLI / REST</h3>
+        <p>Just <code>curl</code> against the canvas server on <code>:3000</code> — no MCP wiring, nothing to load into context. Zero-dependency Node helper scripts ship alongside for the common ops.</p>
+      </div>
+      <div class="card">
+        <span class="tag">optional</span>
+        <h3>Excalidraw MCP tools</h3>
+        <p>If the <code>excalidraw/*</code> MCP tools are loaded, it uses them instead — same server, screenshots straight into context. One switch, no rewrite.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Brand-first, not fixed-up-after</h2>
+    <p class="prose">Before a single shape is drawn, the skill asks what brand to follow and turns your answer into a small recipe it applies on <em>every</em> element at creation time — so diagrams come out on-brand, never recolored afterward. It ships a worked example recipe (the Bowtie Funnel palette) you copy and swap values on.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>You give it…</th><th>it maps to</th></tr></thead>
+        <tbody>
+          <tr><td class="role">primary stroke / text color</td><td><code>strokeColor</code> on nodes + text</td></tr>
+          <tr><td class="role">one accent color</td><td><code>strokeColor</code> on key nodes + all arrows</td></tr>
+          <tr><td class="role">body font</td><td><code>fontFamily</code> on every labeled shape</td></tr>
+          <tr><td class="role">"default"</td><td>clean neutral palette, crisp lines</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Install &amp; use</h2>
+    <pre class="code"><span class="c"># copy the skill into your Claude Code skills directory</span>
+cp -r skills/excalidraw ~/.claude/skills/</pre>
+    <p class="prose use-note">Needs the open-source canvas server running once (setup is in the skill's Step 0):</p>
+    <pre class="code"><span class="c"># the canvas server — open-source, run once, watch at localhost:3000</span>
+git clone https://github.com/yctimlin/mcp_excalidraw && cd mcp_excalidraw
+npm ci && npm run build
+PORT=3000 npm run canvas</pre>
+    <p class="prose use-note">Then invoke it directly, or just say what you want:</p>
+    <pre class="code"><span class="p">/excalidraw</span>
+
+<span class="c"># or, in plain language —</span>
+<span class="c"># "draw the lead-intake flow as an architecture diagram"</span>
+<span class="c"># "turn this Mermaid into an Excalidraw diagram"</span></pre>
+  </section>
+
+  <footer>
+    <span>Bowtie Funnel Resources · MIT</span>
+    <span><a href="https://github.com/bowtiefunnel/bowtie-funnel-resources">github.com/bowtiefunnel</a></span>
+  </footer>
+</div>
+<script>(function(){var b=document.querySelector('.sn-burger'),r=document.querySelector('.sn-right');if(!b||!r)return;function set(o){r.classList.toggle('sn-open',o);b.setAttribute('aria-expanded',o);b.innerHTML=o?'✕':'☰';}b.addEventListener('click',function(){set(!r.classList.contains('sn-open'));});r.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){set(false);});});})();</script>
+</body>
+</html>
