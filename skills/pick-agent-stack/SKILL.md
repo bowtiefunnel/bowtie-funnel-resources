@@ -1,13 +1,13 @@
 ---
 name: pick-agent-stack
-description: Use when choosing the infrastructure that runs an AI agent — "what should run this agent", "which execution engine / LLM router / eval / observability tool", "set up the agent stack", or after pick-agent-pattern settles the architecture and the runtime components aren't chosen yet. Selects per infrastructure layer from the Bowtie Funnel Agent Infrastructure stack (the Headless GTM OS) instead of guessing from training data.
+description: Use when choosing the infrastructure that runs an AI agent — "what should run this agent", "which execution engine / LLM router / eval / observability tool", "set up the agent stack", or after pick-gtm-agent-pattern settles the architecture and the runtime components aren't chosen yet. Selects per infrastructure layer from the Bowtie Funnel Agent Infrastructure stack (the Headless GTM OS) instead of guessing from training data.
 ---
 
 # Pick Agent Stack
 
 ## Overview
 
-`pick-agent-pattern` decides an agent's **shape** (pattern, tier, flowchart).
+`pick-gtm-agent-pattern` decides an agent's **shape** (pattern, tier, flowchart).
 This skill decides **what runs it**: the execution engine, LLM routing, evals,
 observability, state, secrets, and ingress — chosen per layer from the mapped
 core stack, sized to the agent's tier so a simple report agent doesn't get a
@@ -42,7 +42,7 @@ Layers in pipeline order. An agent uses a layer only if it needs it:
 
 ## Steps
 
-1. **Start from the pattern verdict.** If `pick-agent-pattern` hasn't run,
+1. **Start from the pattern verdict.** If `pick-gtm-agent-pattern` hasn't run,
    run it first — the tier drives how much stack the agent earns:
    - **Deterministic pipeline / report agent** → layers 2, 6, 8 (+ 0 if it has
      any keys at all). No ingress, no evals, no redaction.

@@ -101,6 +101,14 @@
   footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; }
   footer a { color: var(--accent); text-decoration: none; }
   a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* Agents dropdown */
+  .sn-dd{position:relative;display:inline-flex;}
+  .sn-dd-toggle{background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:'Roboto',system-ui,sans-serif;}
+  .sn-dd-caret{font-size:10px;opacity:.7;transition:transform .12s;}
+  .sn-dd:hover .sn-dd-caret,.sn-dd:focus-within .sn-dd-caret{transform:rotate(180deg);}
+  .sn-dd-menu{position:absolute;top:calc(100% + 4px);left:0;min-width:170px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 24px rgba(0,0,0,.10);padding:6px;display:none;flex-direction:column;gap:2px;z-index:60;}
+  .sn-dd:hover>.sn-dd-menu,.sn-dd:focus-within>.sn-dd-menu{display:flex;}
+  @media(max-width:640px){.sn-right .sn-dd{display:block;}.sn-right .sn-dd-menu{position:static;display:flex;box-shadow:none;border:none;background:none;padding:2px 0 2px 12px;min-width:0;}.sn-dd-toggle{padding:11px 12px;font-size:15px;}}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -115,8 +123,13 @@
     <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
     <a class="sn-tab active" href="/#skills">Skills</a>
     <a class="sn-tab" href="/tools/">Tools</a>
-    <a class="sn-tab" href="/agent-skills/">GTM Agents</a>
-    <a class="sn-tab" href="/agent-models/">Agent Models</a>
+    <div class="sn-dd">
+      <button class="sn-tab sn-dd-toggle" aria-haspopup="true">Agents <span class="sn-dd-caret">&#9662;</span></button>
+      <div class="sn-dd-menu">
+        <a class="sn-tab" href="/agent-skills/">Agent Skills</a>
+        <a class="sn-tab" href="/agent-models/">Agent Models</a>
+      </div>
+    </div>
   </div>
   <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
   <button class="sn-burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>

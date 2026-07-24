@@ -44,7 +44,7 @@ Invoke it with `/excalidraw`, or just describe the diagram:
 > "draw the lead-intake flow as an architecture diagram"
 > "turn this Mermaid into an Excalidraw diagram"
 
-### [`pick-agent-pattern`](skills/pick-agent-pattern/)
+### [`pick-gtm-agent-pattern`](skills/pick-gtm-agent-pattern/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Works with Claude Code](https://img.shields.io/badge/works%20with-Claude%20Code-6b46c1.svg)
@@ -60,19 +60,19 @@ model-driven control flow) → the neurosymbolic split and the 10-80-10 dial
 0-100-0) → cross-cutting layers and graduated trust → the reliability floor.
 
 Ships with two visual reference pages: the 21 agent build patterns for GTM,
-and the 10-80-10 dial. Open `skills/pick-agent-pattern/reference/` in a browser.
+and the 10-80-10 dial. Open `skills/pick-gtm-agent-pattern/reference/` in a browser.
 
 **Install:**
 
 ```bash
 # personal (all projects)
-cp -r skills/pick-agent-pattern ~/.claude/skills/
+cp -r skills/pick-gtm-agent-pattern ~/.claude/skills/
 
 # or project-scoped
-cp -r skills/pick-agent-pattern /path/to/project/.claude/skills/
+cp -r skills/pick-gtm-agent-pattern /path/to/project/.claude/skills/
 ```
 
-Invoke it with `/pick-agent-pattern`, or just describe the task:
+Invoke it with `/pick-gtm-agent-pattern`, or just describe the task:
 
 > "should this workflow be an agent?"
 > "what pattern should this agent use?"
@@ -174,7 +174,7 @@ Choose the infrastructure that runs an AI agent — execution engine, LLM routin
 evals, observability, state, secrets, ingress — selected per layer from the
 Bowtie Funnel core stack (the Headless GTM OS) instead of guessed from training data.
 
-The companion to `pick-agent-pattern`: the pattern skill decides the agent's
+The companion to `pick-gtm-agent-pattern`: the pattern skill decides the agent's
 *shape*, this one decides *what runs it*. It recalls the Agent Infrastructure
 entries from [labs.bowtiefunnel.com/tools/tools.json](https://labs.bowtiefunnel.com/tools/tools.json),
 walks a ten-layer topology (Infisical → GitHub/DeepEval → Trigger.dev → Svix →
