@@ -237,6 +237,10 @@
   .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;position:relative;}
   .sn-brand{display:flex;align-items:center;text-decoration:none;}
   .sn-brand img{height:60px;width:auto;}
+  .sn-brand .sn-logo-dark{display:none;}
+  @media(prefers-color-scheme:dark){.sn-brand .sn-logo-light{display:none;}.sn-brand .sn-logo-dark{display:block;}}
+  :root[data-theme="light"] .sn-brand .sn-logo-light{display:block;} :root[data-theme="light"] .sn-brand .sn-logo-dark{display:none;}
+  :root[data-theme="dark"] .sn-brand .sn-logo-light{display:none;} :root[data-theme="dark"] .sn-brand .sn-logo-dark{display:block;}
   .sn-labs{font-family:'Roboto',system-ui,sans-serif;font-weight:700;font-size:15px;color:#6B29F7;text-decoration:none;letter-spacing:-.01em;margin-left:2px;}
   .sn-cta{background:#6B29F7;color:#fff;font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:700;text-decoration:none;padding:7px 16px;border-radius:6px;white-space:nowrap;transition:background .2s;}
   .sn-cta:hover{background:#5a20e0;}
