@@ -24,6 +24,7 @@
   /* ---- shared site nav ---- */
   .sitenav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
   .sn-inner{max-width:940px;margin:0 auto;padding:11px clamp(20px,5vw,40px);display:flex;align-items:center;gap:6px;}
+  .sn-left{display:flex;align-items:center;gap:9px;}
   .sn-brand{display:flex;align-items:center;text-decoration:none;}
   .sn-labs{font-family:'Roboto',system-ui,sans-serif;font-weight:700;font-size:15px;color:#6B29F7;text-decoration:none;letter-spacing:-.01em;margin-left:2px;}
   .sn-brand img{height:30px;width:auto;}
@@ -36,14 +37,6 @@
   .sn-tab{font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:500;color:var(--ink);opacity:.6;text-decoration:none;padding:6px 12px;border-radius:6px;transition:opacity .12s,background .12s;}
   .sn-tab:hover{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
   .sn-tab.active{opacity:1;color:#6B29F7;font-weight:700;}
-  .sn-dd{position:relative;display:flex;align-items:center;}
-  .sn-ddbtn{font-family:'Roboto',system-ui,sans-serif;font-size:14px;font-weight:500;color:var(--ink);opacity:.6;background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;transition:opacity .12s,background .12s;}
-  .sn-ddbtn::after{content:"\25BE";font-size:9px;}
-  .sn-ddbtn:hover,.sn-dd:focus-within .sn-ddbtn{opacity:1;background:color-mix(in srgb,var(--ink) 6%,transparent);}
-  .sn-dd.active .sn-ddbtn{opacity:1;color:#6B29F7;font-weight:700;}
-  .sn-menu{position:absolute;top:100%;left:0;min-width:170px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 28px rgba(0,0,0,.12);padding:6px;display:none;flex-direction:column;gap:2px;}
-  .sn-dd:hover .sn-menu,.sn-dd:focus-within .sn-menu{display:flex;}
-  @media(max-width:640px){.sn-dd{flex-direction:column;align-items:stretch;}.sn-menu{position:static;display:flex;border:none;box-shadow:none;background:transparent;padding:0 0 0 14px;min-width:0;}.sn-ddbtn{justify-content:flex-start;}.sn-ddbtn::after{display:none;}}
   @media(max-width:520px){.sn-brand img{height:26px;}.sn-tab{padding:6px 7px;font-size:12.5px;}.sn-cta{padding:6px 10px;font-size:12px;}}
   .sn-inner{position:relative;}
   .sn-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
@@ -85,6 +78,24 @@
   .mc-title .n{font-family:var(--mono);color:var(--accent);}
   .mc-desc{color:var(--muted);font-size:14px;margin:0;}
 
+  /* ---- directory table ---- */
+  .dir-hint{display:none;font-family:var(--mono);font-size:11px;color:var(--muted);margin:0 0 10px;}
+  @media(max-width:820px){.dir-hint{display:block;}}
+  .dir-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);-webkit-overflow-scrolling:touch;}
+  table.dir{width:100%;border-collapse:collapse;min-width:900px;}
+  .dir th,.dir td{text-align:left;vertical-align:top;padding:15px 16px;border-bottom:1px solid var(--line);}
+  .dir thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;background:color-mix(in srgb,var(--ink) 4%,var(--surface));}
+  .dir tbody tr:last-child td{border-bottom:none;}
+  .dir tbody tr:hover td{background:color-mix(in srgb,var(--accent) 5%,transparent);}
+  .dir .d-name{font-family:var(--mono);font-size:14px;font-weight:600;white-space:nowrap;color:var(--ink);}
+  .dir .d-name .slash{color:var(--accent);}
+  .dir td p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;}
+  .dir .d-tags{display:flex;flex-wrap:wrap;gap:5px;}
+  .dir .d-tags span{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
+  .dir .d-link{font-family:var(--mono);font-size:12.5px;color:var(--accent);white-space:nowrap;text-decoration:none;}
+  .dir .d-link:hover{text-decoration:underline;}
+  .dir col.c-name{width:12%;} .dir col.c-desc{width:23%;} .dir col.c-why{width:23%;} .dir col.c-impact{width:23%;} .dir col.c-tags{width:12%;} .dir col.c-link{width:7%;}
+
   footer { margin-top:72px; padding-top:24px; border-top:1px solid var(--line); font-family:var(--mono); font-size:12px; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 18px; justify-content:space-between; }
   footer a{color:var(--accent);text-decoration:none;}
   a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
@@ -94,21 +105,18 @@
 <body>
 
 <nav class="sitenav"><div class="sn-inner">
-  <a class="sn-brand" href="https://bowtiefunnel.com/" aria-label="Bowtie Funnel">
-    <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
-    <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
-  </a>
-  <div class="sn-right">
+  <div class="sn-left">
+    <a class="sn-brand" href="https://bowtiefunnel.com/" aria-label="Bowtie Funnel">
+      <img class="sn-logo-light" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/Bowtie_funnel_2025.webp" alt="Bowtie Funnel">
+      <img class="sn-logo-dark" src="https://bowtiefunnel.com/wp-content/uploads/2026/05/mainLogo.png" alt="Bowtie Funnel">
+    </a>
     <a class="sn-labs" href="https://labs.bowtiefunnel.com/">Labs</a>
+  </div>
+  <div class="sn-right">
     <a class="sn-tab" href="/#skills">Skills</a>
     <a class="sn-tab" href="/tools/">Tools</a>
-    <div class="sn-dd">
-      <button class="sn-ddbtn" aria-haspopup="true" aria-expanded="false">Agents</button>
-      <div class="sn-menu">
-        <a class="sn-tab" href="/agent-skills/">Agent Skills</a>
-        <a class="sn-tab" href="/agent-models/">Agent Models</a>
-      </div>
-    </div>
+    <a class="sn-tab" href="/agent-skills/">GTM Agents</a>
+    <a class="sn-tab" href="/agent-models/">Agent Models</a>
   </div>
   <a class="sn-cta" href="https://bowtiefunnel.com/consultation/">Book Strategy Call</a>
   <button class="sn-burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
@@ -121,59 +129,81 @@
 
   <section id="skills" aria-label="Skills">
     <h2>① Skill directory</h2>
-    <p class="sec-note">Drop-in skills for AI coding agents — planning gates and scaffolding you install once and call by name. Each has its own page with install + usage.</p>
-    <div class="skill-grid">
-
-      <a class="skill-card" href="/skills/excalidraw/">
-        <div class="sc-name"><span class="slash">/</span>excalidraw</div>
-        <p class="sc-desc">Draw and refine real diagrams on a live Excalidraw canvas you watch in the browser — architecture, flows, sequences, Mermaid conversion — then export .excalidraw + PNG. Drives the canvas over plain curl/CLI by default. First step asks for your brand and bakes it into every element.</p>
-        <div class="sc-tags"><span class="sc-tag">live canvas</span><span class="sc-tag">CLI-first</span><span class="sc-tag">brand-first</span></div>
-        <span class="sc-go">View skill →</span>
-      </a>
-
-      <a class="skill-card" href="/skills/agent-anatomy/">
-        <div class="sc-name"><span class="slash">/</span>agent-anatomy</div>
-        <p class="sc-desc">Organize any AI agent's project into a filesystem-first layout — one agent = one folder, every capability a file in a conventionally-named place. Scaffolds new agents or reorganizes messy ones.</p>
-        <div class="sc-tags"><span class="sc-tag">scaffold</span><span class="sc-tag">reorganize</span><span class="sc-tag">never deletes</span></div>
-        <span class="sc-go">View skill →</span>
-      </a>
-
-      <a class="skill-card" href="/skills/pick-agent-pattern/">
-        <div class="sc-name"><span class="slash">/</span>pick-agent-pattern</div>
-        <p class="sc-desc">Run the gate sequence that picks an agent's build pattern and forces the "patterns NOT used" list — so over-engineering dies in planning, before a line of code is written.</p>
-        <div class="sc-tags"><span class="sc-tag">planning</span><span class="sc-tag">anti-over-engineering</span><span class="sc-tag">10-80-10 dial</span></div>
-        <span class="sc-go">View skill →</span>
-      </a>
-
-      <a class="skill-card" href="/skills/pick-gtm-stack/">
-        <div class="sc-name"><span class="slash">/</span>pick-gtm-stack</div>
-        <p class="sc-desc">Pick the right GTM tools for a task or play — filtered by customer-lifecycle stage and job category, ranked by real usage across 48 workflows, recalled live from tools.json instead of guessed from training data.</p>
-        <div class="sc-tags"><span class="sc-tag">tool selection</span><span class="sc-tag">lifecycle-aware</span><span class="sc-tag">recalls tools.json</span></div>
-        <span class="sc-go">View skill →</span>
-      </a>
-
-      <a class="skill-card" href="/skills/pick-agent-stack/">
-        <div class="sc-name"><span class="slash">/</span>pick-agent-stack</div>
-        <p class="sc-desc">Choose the infrastructure that runs an AI agent — execution, LLM routing, evals, observability, state — per layer from the Headless GTM OS core stack, sized to the agent's tier, with the layers NOT provisioned listed so simple agents stay simple.</p>
-        <div class="sc-tags"><span class="sc-tag">agent infra</span><span class="sc-tag">layer map</span><span class="sc-tag">recalls tools.json</span></div>
-        <span class="sc-go">View skill →</span>
-      </a>
-
+    <p class="sec-note">Drop-in skills for AI coding agents — install once and call by name. What each does, why it matters, and the business impact.</p>
+    <p class="dir-hint">→ scroll sideways to see all columns</p>
+    <div class="dir-wrap">
+      <table class="dir">
+        <colgroup><col class="c-name"><col class="c-desc"><col class="c-why"><col class="c-impact"><col class="c-tags"><col class="c-link"></colgroup>
+        <thead><tr>
+          <th>Skill</th><th>Description</th><th>Why it matters</th><th>Business impact</th><th>Tags</th><th>Link</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="d-name"><span class="slash">/</span>agent-anatomy</div></td>
+            <td><p>Organize any agent's project into a filesystem-first layout — one agent = one folder, every capability a file in a conventional place. Scaffolds new agents or reorganizes messy ones.</p></td>
+            <td><p>A predictable structure keeps an agent findable and safe to modify as it grows; scattered files are where reliability and handoffs break down.</p></td>
+            <td><p>Faster onboarding and safer changes — less rework and lower maintenance cost as your agent fleet scales.</p></td>
+            <td><div class="d-tags"><span>scaffold</span><span>reorganize</span><span>never deletes</span></div></td>
+            <td><a class="d-link" href="/skills/agent-anatomy/">View →</a></td>
+          </tr>
+          <tr>
+            <td><div class="d-name"><span class="slash">/</span>pick-agent-pattern</div></td>
+            <td><p>Gate sequence that picks an agent's build pattern and forces a "patterns NOT used" list — over-engineering dies in planning, before a line of code is written.</p></td>
+            <td><p>Most agent cost and fragility is decided before any code, when complexity gets chosen by default. Naming the pattern up front stops that.</p></td>
+            <td><p>Simpler agents shipped faster and cheaper; fewer wasted build cycles on complexity nobody needed.</p></td>
+            <td><div class="d-tags"><span>planning</span><span>anti-over-engineering</span><span>10-80-10 dial</span></div></td>
+            <td><a class="d-link" href="/skills/pick-agent-pattern/">View →</a></td>
+          </tr>
+          <tr>
+            <td><div class="d-name"><span class="slash">/</span>pick-gtm-stack</div></td>
+            <td><p>Pick the right GTM tools for a play — filtered by customer-lifecycle stage and job category, ranked by real usage across 48 workflows, recalled live from tools.json.</p></td>
+            <td><p>Choosing tools by gut wastes budget and time; grounding picks in real usage data beats guessing from training data.</p></td>
+            <td><p>Right-sized tooling per play, less redundant SaaS spend, and faster GTM execution.</p></td>
+            <td><div class="d-tags"><span>tool selection</span><span>lifecycle-aware</span><span>recalls tools.json</span></div></td>
+            <td><a class="d-link" href="/skills/pick-gtm-stack/">View →</a></td>
+          </tr>
+          <tr>
+            <td><div class="d-name"><span class="slash">/</span>pick-agent-stack</div></td>
+            <td><p>Choose the infrastructure that runs an agent — execution, LLM routing, evals, observability, state — per layer, sized to the agent's tier, with the layers NOT provisioned listed.</p></td>
+            <td><p>Under-provision and the agent breaks; over-provision and you burn budget. A tier-sized layer map avoids both.</p></td>
+            <td><p>Production-reliable agents without over-building — controlled infra cost and a faster path to launch.</p></td>
+            <td><div class="d-tags"><span>agent infra</span><span>layer map</span><span>recalls tools.json</span></div></td>
+            <td><a class="d-link" href="/skills/pick-agent-stack/">View →</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
   <section id="tools" aria-label="Tools">
     <h2>② Tools</h2>
-    <p class="sec-note">Reusable runtime code we ship in the open, plus the full GTM stack mapped for tool selection — copy the file, or browse what we run.</p>
-    <div class="skill-grid">
-
-      <a class="skill-card" href="https://github.com/bowtiefunnel/bowtie-funnel-resources/tree/main/tools/llm-switchboard">
-        <div class="sc-name">🔀 llm-switchboard</div>
-        <p class="sc-desc">A ~130-line local prompt router that sits before OpenRouter — classify a prompt in &lt;1ms, pick the model, hand the ID to your call. Free/cheap models for the workflow miles, frontier for thinking; tier picks mirror our RevOps &amp; Marketing agent maps.</p>
-        <div class="sc-tags"><span class="sc-tag">local</span><span class="sc-tag">zero-dep</span><span class="sc-tag">OpenRouter</span></div>
-        <span class="sc-go">View tool →</span>
-      </a>
-
+    <p class="sec-note">Reusable runtime code we ship in the open — copy the file, or browse the full GTM stack we run. What each does, why it matters, and the business impact.</p>
+    <p class="dir-hint">→ scroll sideways to see all columns</p>
+    <div class="dir-wrap">
+      <table class="dir">
+        <colgroup><col class="c-name"><col class="c-desc"><col class="c-why"><col class="c-impact"><col class="c-tags"><col class="c-link"></colgroup>
+        <thead><tr>
+          <th>Tool</th><th>Description</th><th>Why it matters</th><th>Business impact</th><th>Tags</th><th>Link</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="d-name">🔀 llm-switchboard</div></td>
+            <td><p>A ~130-line local prompt router before OpenRouter — classify a prompt in &lt;1ms, pick the model, hand the ID to your call. Cheap models for the workflow miles, frontier for thinking.</p></td>
+            <td><p>Routing every prompt to a frontier model is slow and expensive; sending cheap work to cheap models is where LLM cost is won or lost.</p></td>
+            <td><p>Cuts LLM spend materially with no quality loss on the work that matters — margin on every agent you run.</p></td>
+            <td><div class="d-tags"><span>local</span><span>zero-dep</span><span>OpenRouter</span></div></td>
+            <td><a class="d-link" href="https://github.com/bowtiefunnel/bowtie-funnel-resources/tree/main/tools/llm-switchboard">View →</a></td>
+          </tr>
+          <tr>
+            <td><div class="d-name"><span class="slash">/</span>excalidraw</div></td>
+            <td><p>Draw and refine real diagrams on a live Excalidraw canvas in the browser — architecture, flows, sequences, Mermaid conversion — then export .excalidraw + PNG. Brand-first.</p></td>
+            <td><p>Architecture only aligns a team once it's drawn, and the diagram is usually the bottleneck. Letting the agent draw and export removes it.</p></td>
+            <td><p>Faster architecture alignment and clearer client comms — on-brand visuals without pulling in a designer.</p></td>
+            <td><div class="d-tags"><span>live canvas</span><span>CLI-first</span><span>brand-first</span></div></td>
+            <td><a class="d-link" href="/skills/excalidraw/">View →</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="more-grid" style="margin-top:18px;">
       <a class="more-card" href="/tools/">
